@@ -1,137 +1,142 @@
 /* =====================================================
-   portfolio.js — Smooth scrolling, fade-in, nav, contact
+   portfolio.js — Cyber-Glass Interactive Logic
+   Developer: Nadeem
    ===================================================== */
 
 'use strict';
 
-// ── NAVBAR: scroll state + active link ─────────────────
-const navbar = document.getElementById('navbar');
-const navLinks = document.querySelectorAll('.nav-link');
-const sections = document.querySelectorAll('section[id]');
+document.addEventListener('DOMContentLoaded', () => {
 
-function onScroll() {
-  // Scrolled state for frosted glass
-  navbar.classList.toggle('scrolled', window.scrollY > 30);
+  // ── NAVBAR: Scroll state & active link tracking ────────
+  const navbar = document.getElementById('navbar');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const sections = document.querySelectorAll('section[id]');
 
-  // Active nav link
-  let current = '';
-  sections.forEach(sec => {
-    if (window.scrollY >= sec.offsetTop - 120) current = sec.id;
-  });
-  navLinks.forEach(link => {
-    link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
-  });
-}
+  function onScroll() {
+    if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 30);
 
-window.addEventListener('scroll', onScroll, { passive: true });
-onScroll(); // run once on load
+    let current = '';
+    sections.forEach(sec => {
+      if (window.scrollY >= sec.offsetTop - 140) {
+        current = sec.id;
+      }
+    });
 
-// ── HAMBURGER MENU ─────────────────────────────────────
-const hamburger = document.getElementById('hamburger');
-const navLinksEl = document.getElementById('navLinks');
+    navLinks.forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
+    });
+  }
 
-hamburger.addEventListener('click', () => {
-  hamburger.classList.toggle('open');
-  navLinksEl.classList.toggle('open');
-});
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 
-// Close on nav link click (mobile)
-navLinks.forEach(link => {
-  link.addEventListener('click', () => {
-    hamburger.classList.remove('open');
-    navLinksEl.classList.remove('open');
-  });
-});
+  // ── HAMBURGER MENU (MOBILE) ────────────────────────────
+  const hamburger = document.getElementById('hamburger');
+  const navLinksEl = document.getElementById('navLinks');
 
-// ── FADE-UP INTERSECTION OBSERVER ──────────────────────
-const fadeEls = document.querySelectorAll('.fade-up');
+  if (hamburger && navLinksEl) {
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      navLinksEl.classList.toggle('open');
+    });
 
-const observer = new IntersectionObserver(
-  (entries) => {
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        navLinksEl.classList.remove('open');
+      });
+    });
+  }
+
+  // ── INTERACTIVE SIMULATOR TABS & CONTROLS ──────────────
+  const tabRobo = document.getElementById('tabRobo');
+  const tabRag = document.getElementById('tabRag');
+  const roboBox = document.getElementById('roboBox');
+  const ragBox = document.getElementById('ragBox');
+
+  if (tabRobo && tabRag) {
+    tabRobo.addEventListener('click', () => {
+      tabRobo.classList.add('active');
+      tabRag.classList.remove('active');
+      if (roboBox) roboBox.classList.remove('hidden');
+      if (ragBox) ragBox.classList.remove('active');
+    });
+
+    tabRag.addEventListener('click', () => {
+      tabRag.classList.add('active');
+      tabRobo.classList.remove('active');
+      if (roboBox) roboBox.classList.add('hidden');
+      if (ragBox) ragBox.classList.add('active');
+    });
+  }
+
+  // ── ROBOEYES CURSOR TRACKING ───────────────────────────
+  const eyeLeft = document.getElementById('eyeLeft');
+  const eyeRight = document.getElementById('eyeRight');
+  const eyesScreen = document.getElementById('eyesScreen');
+
+  if (eyesScreen && eyeLeft && eyeRight) {
+    eyesScreen.addEventListener('mousemove', (e) => {
+      const rect = eyesScreen.getBoundingClientRect();
+      const x = (e.clientX - rect.left - rect.width / 2) / 10;
+      const y = (e.clientY - rect.top - rect.height / 2) / 10;
+      eyeLeft.style.transform = `translate(${x}px, ${y}px)`;
+      eyeRight.style.transform = `translate(${x}px, ${y}px)`;
+    });
+
+    eyesScreen.addEventListener('mouseleave', () => {
+      eyeLeft.style.transform = 'translate(0px, 0px)';
+      eyeRight.style.transform = 'translate(0px, 0px)';
+    });
+  }
+
+  // ── SCROLL REVEAL OBSERVER ─────────────────────────────
+  const fadeEls = document.querySelectorAll('.fade-up');
+  const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
-        observer.unobserve(entry.target); // fire once
+        observer.unobserve(entry.target);
       }
     });
-  },
-  { threshold: 0.12, rootMargin: '0px 0px -60px 0px' }
-);
+  }, { threshold: 0.1 });
 
-fadeEls.forEach(el => observer.observe(el));
+  fadeEls.forEach(el => observer.observe(el));
 
-// ── SMOOTH SCROLL for all internal links ───────────────
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function (e) {
-    const target = document.querySelector(this.getAttribute('href'));
-    if (!target) return;
-    e.preventDefault();
-    const offset = 68; // navbar height
-    const top = target.getBoundingClientRect().top + window.scrollY - offset;
-    window.scrollTo({ top, behavior: 'smooth' });
-  });
+  // ── CONTACT FORM FALLBACK ──────────────────────────────
+  const form = document.getElementById('contactForm');
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('cf-name').value;
+      const email = document.getElementById('cf-email').value;
+      const msg = document.getElementById('cf-message').value;
+      window.location.href = `mailto:nadeemise2025@gmail.com?subject=Portfolio Message from ${encodeURIComponent(name)}&body=${encodeURIComponent(msg)}`;
+      
+      const formNote = document.getElementById('formNote');
+      if (formNote) formNote.textContent = 'Draft opened in email client ✓';
+    });
+  }
+
 });
 
-// ── CONTACT FORM → mailto fallback ─────────────────────
-const form = document.getElementById('contactForm');
-const submitBtn = document.getElementById('submitBtn');
-const formNote = document.getElementById('formNote');
+// Global mood switcher for RoboEyes
+function setEyeMood(mood) {
+  const eyeLeft = document.getElementById('eyeLeft');
+  const eyeRight = document.getElementById('eyeRight');
+  if (!eyeLeft || !eyeRight) return;
 
-if (form) {
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const name = document.getElementById('cf-name').value.trim();
-    const email = document.getElementById('cf-email').value.trim();
-    const message = document.getElementById('cf-message').value.trim();
-
-    if (!name || !email || !message) {
-      formNote.textContent = 'Please fill in all fields.';
-      formNote.classList.add('error');
-      return;
-    }
-
-    // Build mailto link
-    const subject = encodeURIComponent(`Portfolio Contact from ${name}`);
-    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
-    const mailto = `mailto:nadeemise2025@gmail.com?subject=${subject}&body=${body}`;
-
-    // Feedback for user
-    submitBtn.textContent = 'Opening your email client… ✓';
-    submitBtn.disabled = true;
-    formNote.textContent = '';
-    formNote.classList.remove('error');
-
-    window.location.href = mailto;
-
-    setTimeout(() => {
-      submitBtn.textContent = 'Send Message →';
-      submitBtn.disabled = false;
-      formNote.textContent = 'Message drafted! Your email client should have opened.';
-      form.reset();
-    }, 2500);
-  });
+  if (mood === 'happy') {
+    eyeLeft.style.height = '35px'; eyeRight.style.height = '35px';
+    eyeLeft.style.borderRadius = '25px 25px 0 0'; eyeRight.style.borderRadius = '25px 25px 0 0';
+  } else if (mood === 'focus') {
+    eyeLeft.style.height = '20px'; eyeRight.style.height = '20px';
+    eyeLeft.style.borderRadius = '8px'; eyeRight.style.borderRadius = '8px';
+  } else if (mood === 'blink') {
+    eyeLeft.style.height = '4px'; eyeRight.style.height = '4px';
+    setTimeout(() => setEyeMood('reset'), 500);
+  } else {
+    eyeLeft.style.height = '75px'; eyeRight.style.height = '75px';
+    eyeLeft.style.borderRadius = '25px'; eyeRight.style.borderRadius = '25px';
+  }
 }
-
-// ── SKILL BAR ANIMATION on scroll ─────────────────────
-const barFills = document.querySelectorAll('.pui-bar-fill');
-
-const barObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const fill = entry.target;
-        const width = fill.style.width;
-        fill.style.width = '0%';
-        requestAnimationFrame(() => {
-          setTimeout(() => { fill.style.transition = 'width 1.2s ease'; fill.style.width = width; }, 100);
-        });
-        barObserver.unobserve(fill);
-      }
-    });
-  },
-  { threshold: 0.5 }
-);
-
-barFills.forEach(el => barObserver.observe(el));
-
