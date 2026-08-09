@@ -126,6 +126,18 @@ function setThemeAccent(colorTheme) {
   if (colorTheme) document.body.classList.add('theme-' + colorTheme);
 }
 
+// Project Code Snippet & Architecture Inspector
+function showProjectSpecSnippet(projectKey) {
+  const snippets = {
+    cardmgmt: `// OpenAI GPT-4o Vision Statement Parser\nresponse = client.chat.completions.create(\n  model="gpt-4o",\n  messages=[{"role": "user", "content": [{"type": "image_url", "image_url": url}]}]\n)`,
+    roboeyes: `// ESP32 WebSockets OLED Eye Animation Loop\nvoid drawRoboEyes() {\n  display.clearDisplay();\n  roboEyes.drawEyes(x, y, eyeMood);\n  display.display();\n}`,
+    legalrag: `// LangChain & Pinecone Vector Search Node\nvectorstore = Pinecone.from_documents(docs, embeddings, index_name="legal-ai")\nqa_chain = RetrievalQA.from_chain_type(llm=llm, retriever=vectorstore.as_retriever())`,
+    insightflow: `// Pandas & Chart.js Conversational Analyst\ndf = pd.read_csv(uploaded_file)\nchart_data = generate_chart_config(df, user_prompt)`
+  };
+
+  alert(snippets[projectKey] || "Architecture snippet ready.");
+}
+
 // Global RAG Prompt Query Simulation
 function runRagSimQuery(queryText) {
   const outputEl = document.getElementById('ragSimOutput');
