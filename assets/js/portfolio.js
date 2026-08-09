@@ -120,6 +120,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+// Global Theme Accent Switcher
+function setThemeAccent(colorTheme) {
+  document.body.className = '';
+  if (colorTheme) document.body.classList.add('theme-' + colorTheme);
+}
+
+// Global RAG Prompt Query Simulation
+function runRagSimQuery(queryText) {
+  const outputEl = document.getElementById('ragSimOutput');
+  if (!outputEl) return;
+
+  const ms = Math.floor(Math.random() * 25) + 30;
+  const score = (0.95 + Math.random() * 0.04).toFixed(3);
+  
+  outputEl.innerHTML = `
+    <div style="color: var(--cyan); margin-bottom: 4px;">⚡ Query: "${queryText || 'Analyze Statement Data'}"</div>
+    <div>🔍 Vector Search Time: <strong>${ms}ms</strong> (Pinecone Similarity Index)</div>
+    <div>📄 Matched Index Document: <code>knowledge_base_v2.pdf</code> (Score: ${score})</div>
+    <div style="color: #10B981; margin-top: 4px;">💡 Extraction Status: 200 OK — Structured JSON Output Ready</div>
+  `;
+}
+
 // Global mood switcher for RoboEyes
 function setEyeMood(mood) {
   const eyeLeft = document.getElementById('eyeLeft');
