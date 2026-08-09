@@ -142,6 +142,22 @@ function runRagSimQuery(queryText) {
   `;
 }
 
+// Joystick Eye Direction Control
+function moveEyeDirection(dir) {
+  const eyeLeft = document.getElementById('eyeLeft');
+  const eyeRight = document.getElementById('eyeRight');
+  if (!eyeLeft || !eyeRight) return;
+
+  let x = 0, y = 0;
+  if (dir === 'left') x = -20;
+  if (dir === 'right') x = 20;
+  if (dir === 'up') y = -15;
+  if (dir === 'down') y = 15;
+
+  eyeLeft.style.transform = `translate(${x}px, ${y}px)`;
+  eyeRight.style.transform = `translate(${x}px, ${y}px)`;
+}
+
 // Global mood switcher for RoboEyes
 function setEyeMood(mood) {
   const eyeLeft = document.getElementById('eyeLeft');
@@ -160,5 +176,6 @@ function setEyeMood(mood) {
   } else {
     eyeLeft.style.height = '75px'; eyeRight.style.height = '75px';
     eyeLeft.style.borderRadius = '25px'; eyeRight.style.borderRadius = '25px';
+    moveEyeDirection('center');
   }
 }
