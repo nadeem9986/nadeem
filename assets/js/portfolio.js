@@ -7,13 +7,22 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ── NAVBAR: Scroll state & active link tracking ────────
+  // ── NAVBAR: Scroll state, active link & reading progress ──
   const navbar = document.getElementById('navbar');
   const navLinks = document.querySelectorAll('.nav-link');
   const sections = document.querySelectorAll('section[id]');
+  const progressBar = document.getElementById('scrollProgress');
 
   function onScroll() {
     if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 30);
+
+    // Reading progress calculation
+    if (progressBar) {
+      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      progressBar.style.width = scrolled + '%';
+    }
 
     let current = '';
     sections.forEach(sec => {
