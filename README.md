@@ -34,6 +34,16 @@ Welcome to my personal website and portfolio repository! I'm **Nadeem**, a Full-
 
 ---
 
+## 🛠️ Deployment & Hosting Guide
+
+### **Deploying to GitHub Pages**
+1. Ensure `index.html` is at the root directory of the repository.
+2. In GitHub, navigate to **Settings > Pages**.
+3. Select the `main` branch as the build source and save.
+4. If using a custom domain, configure the `CNAME` record in DNS settings to point to `nadeem9986.github.io`.
+
+---
+
 ## 📬 Connect With Me
 
 * ✉️ **Email**: [nadeemise2025@gmail.com](mailto:nadeemise2025@gmail.com)
