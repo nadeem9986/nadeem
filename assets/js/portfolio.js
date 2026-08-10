@@ -126,6 +126,19 @@ function setThemeAccent(colorTheme) {
   if (colorTheme) document.body.classList.add('theme-' + colorTheme);
 }
 
+// Live Interactive Skills Filter
+function filterSkillsSearch(query) {
+  const q = query.toLowerCase();
+  document.querySelectorAll('.s-item').forEach(item => {
+    const text = item.textContent.toLowerCase();
+    if (text.includes(q)) {
+      item.style.display = 'flex';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+}
+
 // Project Code Snippet & Architecture Inspector
 function showProjectSpecSnippet(projectKey) {
   const snippets = {
