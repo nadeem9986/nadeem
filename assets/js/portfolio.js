@@ -120,6 +120,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+// Global Copy-To-Clipboard Helper
+function copyTextToClipboard(text, btnElement) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      if (btnElement) {
+        const origText = btnElement.innerText;
+        btnElement.innerText = 'Copied! ✓';
+        setTimeout(() => btnElement.innerText = origText, 2000);
+      }
+    });
+  }
+}
+
 // Global Theme Accent Switcher
 function setThemeAccent(colorTheme) {
   document.body.className = '';
