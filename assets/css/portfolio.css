@@ -58,6 +58,14 @@
   transition: width 0.1s ease-out;
 }
 
+/* Responsive Touch Target & Card Spacing Overrides */
+@media (max-width: 640px) {
+  .container { padding: 0 18px; }
+  .section { padding: 75px 0; }
+  .btn { width: 100%; justify-content: center; }
+  .hero-actions { flex-direction: column; width: 100%; }
+}
+
 /* Theme Color Overrides */
 body.theme-cyan { --accent-primary: #00F2FE; --cyan: #00F2FE; --border-accent: rgba(0, 242, 254, 0.3); }
 body.theme-indigo { --accent-primary: #6366F1; --cyan: #6366F1; --border-accent: rgba(99, 102, 241, 0.3); }
