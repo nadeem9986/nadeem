@@ -39,6 +39,21 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
+  // ── KEYBOARD SHORTCUTS NAVIGATION ──────────────────────
+  window.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    
+    if (e.key.toLowerCase() === 'h') {
+      document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' });
+    } else if (e.key.toLowerCase() === 'p') {
+      document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+    } else if (e.key.toLowerCase() === 's') {
+      document.getElementById('skills')?.scrollIntoView({ behavior: 'smooth' });
+    } else if (e.key.toLowerCase() === 'c') {
+      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+
   // ── HAMBURGER MENU (MOBILE) ────────────────────────────
   const hamburger = document.getElementById('hamburger');
   const navLinksEl = document.getElementById('navLinks');
