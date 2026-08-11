@@ -144,6 +144,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+// Interactive Project Star/Like Counter with localStorage
+function toggleProjectStar(btnEl, projectKey) {
+  let count = parseInt(localStorage.getItem('star_' + projectKey) || '12', 10);
+  const starred = localStorage.getItem('starred_' + projectKey) === 'true';
+  
+  if (starred) {
+    count -= 1;
+    localStorage.setItem('starred_' + projectKey, 'false');
+    if (btnEl) btnEl.style.color = 'var(--text-sub)';
+  } else {
+    count += 1;
+    localStorage.setItem('starred_' + projectKey, 'true');
+    if (btnEl) btnEl.style.color = '#F59E0B';
+  }
+
+  localStorage.setItem('star_' + projectKey, count);
+  if (btnEl) btnEl.innerText = `⭐ ${count}`;
+}
+
 // Animated Stat Counter Logic
 function animateValueCounter(elementId, start, end, duration) {
   const obj = document.getElementById(elementId);
