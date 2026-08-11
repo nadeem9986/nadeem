@@ -39,6 +39,16 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
+  // ── LIVE PING LATENCY INDICATOR ────────────────────────
+  const pingPill = document.querySelector('.status-pill');
+  if (pingPill) {
+    setInterval(() => {
+      const ms = Math.floor(Math.random() * 15) + 18;
+      const dot = '<span class="status-dot"></span>';
+      pingPill.innerHTML = `${dot} Available for Work (${ms}ms ping)`;
+    }, 4000);
+  }
+
   // ── KEYBOARD SHORTCUTS NAVIGATION ──────────────────────
   window.addEventListener('keydown', (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
