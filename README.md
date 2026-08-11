@@ -25,6 +25,22 @@ Welcome to my personal website and portfolio repository! I'm **Nadeem**, a Full-
 
 ---
 
+## 💻 Local Development Setup
+
+To run and preview the portfolio application locally on your machine:
+
+```bash
+# Clone the repository
+git clone https://github.com/nadeem9986/nadeem.git
+cd nadeem
+
+# Serve locally using Python HTTP server
+python -m http.server 8000
+```
+Then navigate to `http://localhost:8000` in any modern web browser.
+
+---
+
 ## 🎓 Education & Background
 
 * **Bachelor of Engineering in Information Science** (2021 – 2025)  
