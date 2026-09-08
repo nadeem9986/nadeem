@@ -1,6 +1,8 @@
-# Portfolio Architecture & Revamp Notes
+# AI Engineer Portfolio Architecture & Revamp Notes
 
-This repository powers Nadeem's personal portfolio at `n4deem.site`. The current revamp is a static, dependency-light website inspired by dark metallic engineering marks: precision rings, calibration lines, brushed silver typography, and a custom geometric `N` monogram.
+This repository powers Nadeem's personal portfolio at `n4deem.site`. The current revamp is a static, dependency-light hiring portfolio focused on **AI Engineer**, **GenAI Engineer**, and **RAG Engineer** roles.
+
+The visual language still uses dark metallic engineering marks, but the content hierarchy now prioritizes job signal: AI positioning, proof-of-work, selected AI projects, system boundaries, and direct repository links.
 
 ## 1. Application Shape
 
@@ -12,7 +14,18 @@ This repository powers Nadeem's personal portfolio at `n4deem.site`. The current
 
 The site intentionally avoids a build step so it can run directly on GitHub Pages.
 
-## 2. Visual System
+## 2. Hiring Strategy
+
+The page is organized around what AI hiring reviewers scan for:
+
+- A clear role target in the first viewport.
+- A concise AI systems value proposition.
+- Strongest AI projects first, not every repository.
+- Proof panels for RAG, document intelligence, and AI product delivery.
+- Direct GitHub links for inspection.
+- Secondary robotics/embedded projects shown as systems breadth, not the main identity.
+
+## 3. Visual System
 
 The theme follows a monochrome industrial direction:
 
@@ -24,15 +37,15 @@ The theme follows a monochrome industrial direction:
 
 The design language is meant to feel closer to a machine blueprint, robotics lab, and premium identity system than a generic portfolio template.
 
-## 3. Content Model
+## 4. Content Model
 
 The portfolio now prioritizes high-signal projects from the local docs and public GitHub work:
 
-- ESP32 4-DOF Robot Arm
-- Udaan Aviation
 - Credit Card AI Analyzer
 - Legal AI RAG Assistant
 - InsightFlow CSV Analyzer
+- ESP32 4-DOF Robot Arm
+- Udaan Aviation
 - RoboEyes ESP32 Dashboard
 - ESP Drone
 - Rescue Call Emergency System
@@ -40,7 +53,7 @@ The portfolio now prioritizes high-signal projects from the local docs and publi
 
 Projects are grouped by category using `data-category` attributes. The filter buttons in the project section use those attributes without relying on inline `onclick` handlers.
 
-## 4. JavaScript Responsibilities
+## 5. JavaScript Responsibilities
 
 `portfolio.js` handles:
 
@@ -51,7 +64,7 @@ Projects are grouped by category using `data-category` attributes. The filter bu
 - Contact form mailto generation, including the sender email in the body.
 - Canvas-based precision particle lines in the background.
 
-## 5. Deployment
+## 6. Deployment
 
 No package install or build command is required.
 

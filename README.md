@@ -1,16 +1,17 @@
-# Nadeem — Metallic Engineering Portfolio
+# Nadeem — AI Engineer Portfolio
 
 Welcome to my personal website and portfolio repository. I'm **Nadeem**, a Full-Stack Developer, Agentic AI Engineer, and IoT/Embedded Systems Builder based in **Bengaluru, India**.
 
-The current site is a static, GitHub Pages-ready portfolio inspired by dark metal branding, precision engineering diagrams, robotics controls, and the idea of turning **ideas into reality**.
+The current site is a static, GitHub Pages-ready portfolio built to attract **AI Engineer / GenAI Engineer / RAG Engineer** roles. It prioritizes proof-of-work, inspectable projects, and recruiter-readable evidence over generic portfolio decoration.
 
 ---
 
 ## Core Technical Stack & Focus Areas
 
-* **Agentic AI & RAG Engineering**: Document RAG search pipelines built with **LangChain**, **Pinecone Vector DB**, **OpenAI GPT-4o Vision API**, and **Python**.
-* **IoT & Microcontroller Firmware**: C++ embedded systems for **ESP32** hardware, robotics controls, OLED graphics engines, WebSockets local control servers, and drone firmware.
-* **Full-Stack Web Development**: **MERN Stack** platforms, lightweight **Hono** APIs, **Dockerized microservices**, Flask tools, and polished static product websites.
+* **LLM & RAG Engineering**: Document search, retrieval design, vector databases, prompt-controlled extraction, and grounded answer systems.
+* **Document Intelligence**: OpenAI vision workflows, credit card statement parsing, legal document Q&A, and structured output generation.
+* **AI Product Delivery**: Python, Flask, Streamlit, Pandas, Chart.js, REST APIs, and full-stack interfaces that make AI systems usable.
+* **Systems Breadth**: ESP32, robotics controls, drone firmware, WebSockets, telemetry, and embedded dashboards as a secondary differentiator.
 
 ---
 

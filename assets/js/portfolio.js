@@ -59,6 +59,11 @@ document.querySelectorAll(".filter").forEach((button) => {
       const categories = (card.dataset.category || "").split(" ");
       card.classList.toggle("is-hidden", filter !== "all" && !categories.includes(filter));
     });
+
+    document.querySelectorAll(".build-row").forEach((row) => {
+      const categories = (row.dataset.category || "").split(" ");
+      row.classList.toggle("is-hidden", filter !== "all" && !categories.includes(filter));
+    });
   });
 });
 
@@ -92,20 +97,20 @@ if (ctx && canvas) {
 
   function seedPoints() {
     points.length = 0;
-    const count = Math.min(72, Math.max(36, Math.floor(window.innerWidth / 24)));
+    const count = Math.min(42, Math.max(20, Math.floor(window.innerWidth / 42)));
     for (let i = 0; i < count; i += 1) {
       points.push({
         x: Math.random() * window.innerWidth,
         y: Math.random() * window.innerHeight,
-        vx: (Math.random() - 0.5) * 0.22,
-        vy: (Math.random() - 0.5) * 0.22
+        vx: (Math.random() - 0.5) * 0.12,
+        vy: (Math.random() - 0.5) * 0.12
       });
     }
   }
 
   function draw() {
     ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    ctx.strokeStyle = "rgba(255,255,255,0.08)";
+    ctx.strokeStyle = "rgba(255,255,255,0.055)";
     ctx.lineWidth = 1;
 
     points.forEach((point, index) => {
@@ -117,7 +122,7 @@ if (ctx && canvas) {
 
       ctx.beginPath();
       ctx.arc(point.x, point.y, 1.15, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(245,245,245,0.42)";
+      ctx.fillStyle = "rgba(245,245,245,0.25)";
       ctx.fill();
 
       for (let j = index + 1; j < points.length; j += 1) {
