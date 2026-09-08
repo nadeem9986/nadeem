@@ -1,48 +1,68 @@
-# Portfolio System Architecture & Technical Specifications
+# Portfolio Architecture & Revamp Notes
 
-This document outlines the architectural patterns, design tokens, and engineering specs powering Nadeem's personal portfolio ecosystem.
+This repository powers Nadeem's personal portfolio at `n4deem.site`. The current revamp is a static, dependency-light website inspired by dark metallic engineering marks: precision rings, calibration lines, brushed silver typography, and a custom geometric `N` monogram.
 
----
+## 1. Application Shape
 
-## 🎨 1. Cyber-Glass Design System & Tokens
+- `index.html` contains semantic page structure and portfolio content.
+- `assets/css/portfolio.css` contains the full visual system and responsive layout.
+- `assets/js/portfolio.js` contains canvas motion, navigation state, project filtering, and the contact form mailto flow.
+- `resume/Nadeem_resume.pdf` is the downloadable resume.
+- `CNAME` points GitHub Pages to `n4deem.site`.
 
-The application follows an **Apple & Cyber-Glass hybrid design system**, prioritizing dark mode canvas aesthetics, glowing accents, and smooth backdrop blurs.
+The site intentionally avoids a build step so it can run directly on GitHub Pages.
 
-### **CSS Custom Variables**
-- `--bg`: `#05070B` (Obsidian Space Canvas)
-- `--bg-card`: `rgba(18, 26, 44, 0.55)` (Glassmorphism Translucent Surface)
-- `--cyan`: `#00F2FE` (Primary Cyber Cyan Accent)
-- `--indigo`: `#6366F1` (Secondary Electric Indigo Accent)
-- `--emerald`: `#10B981` (Live Status Indicator)
-- `--pink`: `#EC4899` (Secondary Glow Accent)
+## 2. Visual System
 
----
+The theme follows a monochrome industrial direction:
 
-## ⚡ 2. HTML5 Interactive Canvas Math
+- Black graphite background with subtle grain and scanline overlays.
+- Metallic silver typography and panel surfaces.
+- Thin calibration lines, circular engineering rings, and node markers.
+- A CSS-built geometric `N` monogram in the hero.
+- Dense project cards designed like technical plates.
 
-The particle constellation background (`#bgCanvas`) runs an un-blocked 60FPS animation loop:
+The design language is meant to feel closer to a machine blueprint, robotics lab, and premium identity system than a generic portfolio template.
 
-$$\text{Distance}(p_1, p_2) = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}$$
+## 3. Content Model
 
-When $\text{Distance} < 120\text{px}$, a dynamic vector line is rendered between particles with an opacity scaled by:
+The portfolio now prioritizes high-signal projects from the local docs and public GitHub work:
 
-$$\alpha = 0.15 \times \left(1 - \frac{\text{Distance}}{120}\right)$$
+- ESP32 4-DOF Robot Arm
+- Udaan Aviation
+- Credit Card AI Analyzer
+- Legal AI RAG Assistant
+- InsightFlow CSV Analyzer
+- RoboEyes ESP32 Dashboard
+- ESP Drone
+- Rescue Call Emergency System
+- Subscription Dashboard
 
----
+Projects are grouped by category using `data-category` attributes. The filter buttons in the project section use those attributes without relying on inline `onclick` handlers.
 
-## 🤖 3. ESP32 RoboEyes & RAG AI Simulation Engine
+## 4. JavaScript Responsibilities
 
-1. **ESP32 RoboEyes Widget**:
-   - Cursor tracking via `mousemove` event bounding rect offsets.
-   - Dynamic mood state transformations (`happy`, `focus`, `blink`, `reset`).
-2. **RAG Vector Search Console**:
-   - Simulates vector similarity query parsing and returns extraction status metrics (Pinecone similarity score: ~0.98, search latency: ~30-50ms).
+`portfolio.js` handles:
 
----
+- Sticky header state on scroll.
+- Active navigation section highlighting.
+- Mobile navigation open/close behavior.
+- Project filtering.
+- Contact form mailto generation, including the sender email in the body.
+- Canvas-based precision particle lines in the background.
 
-## 🌐 4. Component Directory Breakdown
+## 5. Deployment
 
-- `index.html`: Main self-contained single-page web application.
-- `assets/css/portfolio.css`: Cyber-glass styling system & responsive design rules.
-- `assets/js/portfolio.js`: Interactive canvas, particle math, scroll observer, and widget triggers.
-- `resume/Nadeem_resume.pdf`: Downloadable PDF resume.
+No package install or build command is required.
+
+Preview locally by opening `index.html`, or serve the folder:
+
+```bash
+python -m http.server 8000
+```
+
+Then visit:
+
+```text
+http://localhost:8000
+```
