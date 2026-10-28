@@ -559,13 +559,15 @@ footer a { color: var(--dim); }
         window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     var nav = document.querySelector(".nav-links");
     if (!nav || nav.scrollWidth <= nav.clientWidth) return;
-    var cancelled = false, start = null, from = nav.scrollLeft;
-    var to = nav.scrollWidth - nav.clientWidth;
-    var originalBehavior = nav.style.scrollBehavior;
-    nav.style.scrollBehavior = "auto";
-    function cancelHint() { cancelled = true; cleanup(); }
+    var from = nav.scrollLeft, to = nav.scrollWidth - nav.clientWidth;
+    var cancelled = false;
+    function cancelHint() {
+      if (cancelled) return;
+      cancelled = true;
+      nav.scrollTo({ left: nav.scrollLeft, behavior: "instant" });
+      cleanup();
+    }
     function cleanup() {
-      nav.style.scrollBehavior = originalBehavior;
       nav.removeEventListener("pointerdown", cancelHint);
       nav.removeEventListener("touchstart", cancelHint);
       nav.removeEventListener("wheel", cancelHint);
@@ -575,26 +577,12 @@ footer a { color: var(--dim); }
     nav.addEventListener("touchstart", cancelHint, { passive: true });
     nav.addEventListener("wheel", cancelHint, { passive: true });
     nav.addEventListener("keydown", cancelHint);
-    function frame(now) {
+    nav.scrollTo({ left: to, behavior: "smooth" });
+    setTimeout(function () {
       if (cancelled) return;
-      if (start === null) start = now;
-      var elapsed = now - start, half = 550, progress, eased;
-      if (elapsed < half) {
-        progress = elapsed / half;
-        eased = progress * progress * (3 - 2 * progress);
-        nav.scrollLeft = from + (to - from) * eased;
-        requestAnimationFrame(frame);
-      } else if (elapsed < half * 2) {
-        progress = (elapsed - half) / half;
-        eased = progress * progress * (3 - 2 * progress);
-        nav.scrollLeft = to + (from - to) * eased;
-        requestAnimationFrame(frame);
-      } else {
-        nav.scrollLeft = from;
-        cleanup();
-      }
-    }
-    requestAnimationFrame(frame);
+      nav.scrollTo({ left: from, behavior: "smooth" });
+      setTimeout(cleanup, 800);
+    }, 800);
   }
 
   /* boot sequence */
