@@ -206,7 +206,7 @@ h2 .slash { color: var(--faint); }
 
 /* ---------- hero ---------- */
 .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr; gap: 2.5rem; align-items: center; padding-top: 7rem; }
-@media (min-width: 920px) { .hero { grid-template-columns: 1.15fr 0.85fr; } .status-panel { display: block; } }
+@media (min-width: 920px) { .hero { grid-template-columns: 1.15fr 0.85fr; } }
 .hero-copy .kicker { color: var(--faint); font-size: 0.78rem; letter-spacing: 0.4em; text-transform: uppercase; margin-bottom: 1rem; }
 .hero-copy h1 {
   font-size: clamp(2.6rem, 8vw, 4.6rem); line-height: 1.05; letter-spacing: 0.06em; color: var(--white);
@@ -222,6 +222,7 @@ h2 .slash { color: var(--faint); }
 
 /* ---------- status panel (hero side) ---------- */
 .status-panel { display: none; padding: 1.6rem 1.7rem; }
+@media (min-width: 920px) { .status-panel { display: block; } }
 .status-panel .sp-head {
   display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1.2rem;
   font-size: 0.68rem; letter-spacing: 0.3em; color: var(--faint); text-transform: uppercase;
