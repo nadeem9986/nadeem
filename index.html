@@ -552,6 +552,48 @@ footer a { color: var(--dim); }
 (function () {
   "use strict";
 
+  /* one-time mobile nav hint after the boot screen clears */
+  var navHintScheduled = false;
+  function startNavHint() {
+    if (!window.matchMedia || !window.matchMedia("(max-width: 600px)").matches ||
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var nav = document.querySelector(".nav-links");
+    if (!nav || nav.scrollWidth <= nav.clientWidth) return;
+    var cancelled = false, start = null, from = nav.scrollLeft;
+    var to = nav.scrollWidth - nav.clientWidth;
+    function cancelHint() { cancelled = true; cleanup(); }
+    function cleanup() {
+      nav.removeEventListener("pointerdown", cancelHint);
+      nav.removeEventListener("touchstart", cancelHint);
+      nav.removeEventListener("wheel", cancelHint);
+      nav.removeEventListener("keydown", cancelHint);
+    }
+    nav.addEventListener("pointerdown", cancelHint, { passive: true });
+    nav.addEventListener("touchstart", cancelHint, { passive: true });
+    nav.addEventListener("wheel", cancelHint, { passive: true });
+    nav.addEventListener("keydown", cancelHint);
+    function frame(now) {
+      if (cancelled) return;
+      if (start === null) start = now;
+      var elapsed = now - start, half = 550, progress, eased;
+      if (elapsed < half) {
+        progress = elapsed / half;
+        eased = progress * progress * (3 - 2 * progress);
+        nav.scrollLeft = from + (to - from) * eased;
+        requestAnimationFrame(frame);
+      } else if (elapsed < half * 2) {
+        progress = (elapsed - half) / half;
+        eased = progress * progress * (3 - 2 * progress);
+        nav.scrollLeft = to + (from - to) * eased;
+        requestAnimationFrame(frame);
+      } else {
+        nav.scrollLeft = from;
+        cleanup();
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+
   /* boot sequence */
   var boot = document.getElementById("boot");
   var bootLines = document.getElementById("bootLines");
@@ -569,6 +611,10 @@ footer a { color: var(--dim); }
     if (bootDone) return;
     bootDone = true;
     boot.classList.add("done");
+    if (!navHintScheduled) {
+      navHintScheduled = true;
+      setTimeout(startNavHint, 450);
+    }
   }
   {
     var li = 0;
