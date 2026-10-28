@@ -758,11 +758,18 @@ footer a { color: var(--dim); }
     if (meta) { meta.setAttribute('content', m === 'dark' ? '#0a0a0a' : '#f4f4f4'); }
   }
   paint(root.getAttribute('data-theme') || 'dark');
-  var preparedFlip = null;
-  function prepareFlip(next) {
+  function changeTheme(next) {
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      paint(next);
+      return;
+    }
     // Pre-painted faces: only the rotation is animated, never colors/borders.
-    // Match every rotating piece to one visible background-grid square.
-    var size = 44;
+    // Group 2x2 background squares on phones to avoid hundreds of GPU layers.
+    var size = window.innerWidth < 600 ? 88 : 44;
+    while (Math.ceil(innerWidth / size) * Math.ceil(innerHeight / size) > 240) size += 44;
     var cols = Math.ceil(innerWidth / size), rows = Math.ceil(innerHeight / size);
     var oldLight = root.getAttribute('data-theme') === 'light';
     var oldBg = oldLight ? '#f4f4f4' : '#0a0a0a';
@@ -792,37 +799,8 @@ footer a { color: var(--dim); }
       }
     }
     layer.appendChild(fragment);
-    layer.style.opacity = '0';
-    document.body.appendChild(layer);
-    return { next: next, layer: layer, tiles: tiles, rows: rows, cols: cols, width: innerWidth, height: innerHeight };
-  }
-  function warmFlip() {
-    var prepare = function () {
-      if (preparedFlip || btn.disabled || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      preparedFlip = prepareFlip(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-    };
-    if (window.requestIdleCallback) requestIdleCallback(prepare, { timeout: 1000 });
-    else setTimeout(prepare, 100);
-  }
-  warmFlip();
-  function changeTheme(next) {
-    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) {
-      if (preparedFlip) { preparedFlip.layer.remove(); preparedFlip = null; }
-      root.setAttribute('data-theme', next);
-      try { localStorage.setItem('theme', next); } catch (e) {}
-      paint(next);
-      return;
-    }
-    // Reuse an idle-prepared layer so a tap starts the wave without building 180 nodes.
-    if (preparedFlip && (preparedFlip.next !== next || preparedFlip.width !== innerWidth || preparedFlip.height !== innerHeight)) {
-      preparedFlip.layer.remove(); preparedFlip = null;
-    }
-    var prepared = preparedFlip || prepareFlip(next);
-    preparedFlip = null;
-    var layer = prepared.layer, tiles = prepared.tiles, rows = prepared.rows, cols = prepared.cols;
     btn.disabled = true;
-    layer.style.opacity = '1';
+    document.body.appendChild(layer);
     var direction = next === 'light' ? 1 : -1;
     // Let Chrome rasterize the faces before starting the compositor animation.
     requestAnimationFrame(function () { requestAnimationFrame(function () {
@@ -846,7 +824,6 @@ footer a { color: var(--dim); }
       })).then(function () {
         layer.remove();
         btn.disabled = false;
-        warmFlip();
       });
     }); });
   }
