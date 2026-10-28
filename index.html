@@ -561,8 +561,11 @@ footer a { color: var(--dim); }
     if (!nav || nav.scrollWidth <= nav.clientWidth) return;
     var cancelled = false, start = null, from = nav.scrollLeft;
     var to = nav.scrollWidth - nav.clientWidth;
+    var originalBehavior = nav.style.scrollBehavior;
+    nav.style.scrollBehavior = "auto";
     function cancelHint() { cancelled = true; cleanup(); }
     function cleanup() {
+      nav.style.scrollBehavior = originalBehavior;
       nav.removeEventListener("pointerdown", cancelHint);
       nav.removeEventListener("touchstart", cancelHint);
       nav.removeEventListener("wheel", cancelHint);
