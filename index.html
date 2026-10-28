@@ -1,308 +1,627 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nadeem | AI Engineer - RAG, LLM Apps & Production AI Systems</title>
-  <meta name="description" content="Nadeem is an AI Engineer building RAG pipelines, LLM document extraction systems, vision AI tools, evaluation-ready AI apps, and production web interfaces." />
-  <meta name="theme-color" content="#050505" />
-  <meta property="og:title" content="Nadeem | AI Engineer Portfolio" />
-  <meta property="og:description" content="RAG systems, LLM document intelligence, vision AI, data analysis agents, and production-focused AI engineering projects." />
-  <meta property="og:type" content="website" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/portfolio.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nadeem | Software Engineer</title>
+<meta name="description" content="Nadeem is a software engineer in Bengaluru who builds production web interfaces, Android apps and AI-assisted workflows. Software engineering at SmiRox Ventures; ships with HTML, CSS, JavaScript, React, Node.js and Kotlin." />
+<meta name="theme-color" content="#020610" />
+<meta property="og:title" content="Nadeem | Software Engineer" />
+<meta property="og:description" content="Software engineer building production web interfaces and AI-assisted systems. FamEase UIs across 8+ domains at SmiRox Ventures." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://n4deem.site" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23020610'/%3E%3Ccircle cx='32' cy='32' r='26' fill='none' stroke='%2300d4ff' stroke-width='3'/%3E%3Ccircle cx='32' cy='32' r='15' fill='none' stroke='%2300d4ff' stroke-width='2' stroke-dasharray='4 3'/%3E%3Ccircle cx='32' cy='32' r='8' fill='%2300d4ff'/%3E%3C/svg%3E" />
+<style>
+@font-face {
+  font-family: 'Departure Mono';
+  src: url('assets/webfonts/DepartureMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+:root {
+  --bg: #020610;
+  --bg2: #04101f;
+  --panel: rgba(6, 22, 42, 0.58);
+  --panel-edge: rgba(0, 212, 255, 0.28);
+  --cyan: #00d4ff;
+  --cyan-soft: #7fe7ff;
+  --blue: #2f7bff;
+  --amber: #7fe7ff;
+  --text: #d8efff;
+  --dim: #7fa8c9;
+  --faint: #41658a;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Departure Mono', 'Courier New', monospace;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+::selection { background: rgba(0, 212, 255, 0.35); color: #fff; }
+a { color: var(--cyan-soft); text-decoration: none; }
+a:hover { color: #fff; text-shadow: 0 0 12px rgba(0, 212, 255, 0.8); }
+
+/* ---------- background layers ---------- */
+.bg-grid {
+  position: fixed; inset: 0; z-index: -3;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 0%, rgba(18, 84, 160, 0.28), transparent 65%),
+    radial-gradient(ellipse 60% 45% at 50% 110%, rgba(0, 90, 140, 0.18), transparent 60%),
+    var(--bg);
+}
+.bg-grid::before {
+  content: ""; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 212, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 255, 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, #000 30%, transparent 100%);
+}
+.scanlines {
+  position: fixed; inset: 0; z-index: 60; pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.16) 0 1px, transparent 1px 3px);
+  opacity: 0.55; mix-blend-mode: multiply;
+}
+.vignette {
+  position: fixed; inset: 0; z-index: 59; pointer-events: none;
+  box-shadow: inset 0 0 220px rgba(0, 0, 0, 0.85);
+}
+.sweep {
+  position: fixed; left: 0; right: 0; top: -10%; height: 90px; z-index: 58; pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(0, 212, 255, 0.05), transparent);
+  animation: sweep 9s linear infinite;
+}
+@keyframes sweep { 0% { top: -12%; } 100% { top: 112%; } }
+
+/* ---------- boot overlay ---------- */
+#boot {
+  position: fixed; inset: 0; z-index: 100; background: #01040b;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.7s ease, visibility 0.7s;
+}
+#boot.done { opacity: 0; visibility: hidden; }
+.boot-inner { width: min(620px, 88vw); }
+.boot-logo {
+  color: var(--cyan); font-size: clamp(1.1rem, 3vw, 1.5rem); letter-spacing: 0.35em;
+  text-shadow: 0 0 18px rgba(0, 212, 255, 0.7); margin-bottom: 1.4rem;
+  animation: flicker 3s linear infinite;
+}
+.boot-lines { min-height: 10.5em; font-size: clamp(0.72rem, 2.2vw, 0.92rem); color: var(--dim); }
+.boot-lines div { white-space: pre-wrap; }
+.boot-lines .ok { color: var(--cyan); }
+.boot-bar {
+  margin-top: 1.2rem; height: 8px; border: 1px solid var(--panel-edge);
+  padding: 1px; background: rgba(0, 20, 40, 0.6);
+}
+.boot-bar span {
+  display: block; height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--blue), var(--cyan));
+  box-shadow: 0 0 14px rgba(0, 212, 255, 0.8); transition: width 0.25s ease;
+}
+.boot-skip { margin-top: 1rem; font-size: 0.7rem; letter-spacing: 0.3em; color: var(--faint); animation: blink 1.2s steps(2) infinite; }
+@keyframes blink { 50% { opacity: 0.25; } }
+@keyframes flicker { 0%, 100% { opacity: 1; } 92% { opacity: 1; } 93% { opacity: 0.4; } 94% { opacity: 1; } 96% { opacity: 0.6; } 97% { opacity: 1; } }
+
+/* ---------- nav ---------- */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.85rem clamp(1rem, 4vw, 2.5rem);
+  background: linear-gradient(180deg, rgba(2, 8, 18, 0.92), rgba(2, 8, 18, 0.75));
+  border-bottom: 1px solid rgba(0, 212, 255, 0.18);
+  backdrop-filter: blur(10px);
+}
+.nav-brand { display: flex; align-items: center; gap: 0.65rem; color: var(--text); letter-spacing: 0.18em; font-size: 0.95rem; }
+.nav-brand .dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--cyan); box-shadow: 0 0 10px var(--cyan), 0 0 26px rgba(0, 212, 255, 0.6);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+.nav-links { display: flex; align-items: center; gap: clamp(0.8rem, 2.4vw, 1.7rem); font-size: 0.8rem; letter-spacing: 0.12em; }
+.nav-links a { color: var(--dim); text-transform: uppercase; }
+.nav-links a:hover { color: var(--cyan); }
+.nav-status { color: var(--faint); font-size: 0.68rem; letter-spacing: 0.2em; display: none; }
+@media (min-width: 900px) { .nav-status { display: inline; } }
+.btn {
+  display: inline-block; padding: 0.55rem 1.15rem; font-size: 0.78rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--cyan) !important;
+  border: 1px solid var(--panel-edge); background: rgba(0, 60, 110, 0.22);
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  transition: background 0.25s, box-shadow 0.25s;
+}
+.btn:hover { background: rgba(0, 110, 190, 0.35); box-shadow: 0 0 22px rgba(0, 212, 255, 0.35); text-shadow: none; }
+.btn.solid { background: rgba(0, 130, 220, 0.3); color: #eaf8ff !important; border-color: rgba(0, 212, 255, 0.55); }
+
+/* ---------- layout ---------- */
+main { position: relative; z-index: 1; }
+section { padding: clamp(4rem, 9vh, 7rem) clamp(1.1rem, 5vw, 3rem); max-width: 1180px; margin: 0 auto; }
+.sec-tag {
+  display: inline-block; font-size: 0.7rem; letter-spacing: 0.35em; color: var(--cyan);
+  border: 1px solid var(--panel-edge); padding: 0.28rem 0.8rem; margin-bottom: 1.1rem;
+  background: rgba(0, 40, 80, 0.25); text-transform: uppercase;
+}
+h2 {
+  font-size: clamp(1.5rem, 4.2vw, 2.3rem); letter-spacing: 0.12em; color: #eaf7ff;
+  text-shadow: 0 0 26px rgba(0, 212, 255, 0.35); margin-bottom: 2rem; text-transform: uppercase;
+}
+h2 .slash { color: var(--cyan); }
+
+/* ---------- hero ---------- */
+.hero { min-height: 100vh; display: grid; grid-template-columns: 1fr; gap: 2.5rem; align-items: center; padding-top: 7rem; }
+@media (min-width: 920px) { .hero { grid-template-columns: 0.9fr 1.1fr; } }
+.hero-copy .kicker { color: var(--cyan); font-size: 0.78rem; letter-spacing: 0.4em; text-transform: uppercase; margin-bottom: 1rem; }
+.hero-copy h1 {
+  font-size: clamp(2.6rem, 8vw, 4.6rem); line-height: 1.05; letter-spacing: 0.06em; color: #f2fbff;
+  text-shadow: 0 0 40px rgba(0, 212, 255, 0.45);
+}
+.hero-copy h1 span { color: var(--cyan); }
+.hero-role { margin-top: 1rem; font-size: clamp(0.95rem, 2.6vw, 1.25rem); color: var(--text); letter-spacing: 0.1em; }
+.hero-role .cursor { display: inline-block; width: 0.6em; color: var(--cyan); animation: blink 1s steps(2) infinite; }
+.hero-sub { margin-top: 1.2rem; color: var(--dim); max-width: 46ch; font-size: 0.92rem; }
+.hero-ctas { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 0.9rem; }
+.hero-stats { margin-top: 2.6rem; display: flex; flex-wrap: wrap; gap: 1.6rem; }
+.stat .num { font-size: 1.5rem; color: var(--cyan); text-shadow: 0 0 16px rgba(0, 212, 255, 0.6); }
+.stat .lbl { font-size: 0.66rem; letter-spacing: 0.22em; color: var(--faint); text-transform: uppercase; }
+
+/* ---------- arc reactor ---------- */
+.reactor-wrap { display: flex; align-items: center; justify-content: center; }
+.reactor { position: relative; width: min(340px, 68vw); aspect-ratio: 1; filter: drop-shadow(0 0 34px rgba(0, 180, 255, 0.35)); }
+.reactor .ring { position: absolute; border-radius: 50%; }
+.reactor .r1 { inset: 0; border: 1px solid rgba(0, 212, 255, 0.25); animation: spin 46s linear infinite; }
+.reactor .r1::before, .reactor .r2::before { content: ""; position: absolute; inset: -1px; border-radius: 50%; border: 1px solid transparent; border-top-color: rgba(127, 231, 255, 0.9); }
+.reactor .r2 { inset: 6%; border: 2px dashed rgba(0, 212, 255, 0.5); animation: spin 26s linear infinite reverse; }
+.reactor .r3 { inset: 15%; border: 10px solid rgba(0, 110, 200, 0.16); border-top-color: rgba(0, 212, 255, 0.85); border-right-color: rgba(0, 212, 255, 0.45); animation: spin 9s linear infinite; }
+.reactor .r4 { inset: 26%; border: 1px solid rgba(127, 231, 255, 0.55); border-bottom-color: transparent; border-left-color: transparent; animation: spin 5s linear infinite reverse; }
+.reactor .ticks { inset: 11%; animation: spin 60s linear infinite; }
+.reactor .ticks i { position: absolute; left: 50%; top: 0; width: 2px; height: 7%; background: rgba(0, 212, 255, 0.55); transform-origin: 50% 750%; }
+.reactor .core {
+  position: absolute; inset: 36%; border-radius: 50%;
+  background: radial-gradient(circle at 50% 42%, #ffffff 0%, #b5f1ff 22%, #36c9ff 48%, #0a5f9e 78%, #062a4d 100%);
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.95), 0 0 90px rgba(0, 160, 255, 0.55), inset 0 0 26px rgba(255, 255, 255, 0.55);
+  animation: corepulse 2.6s ease-in-out infinite;
+}
+.reactor .housing { position: absolute; inset: 30%; border-radius: 50%; border: 3px solid rgba(160, 220, 255, 0.35); box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6); }
+.reactor .tri { position: absolute; inset: 40.5%; border-radius: 50%; border: 2px solid rgba(2, 20, 40, 0.85); }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes corepulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+/* ---------- panels ---------- */
+.panel {
+  position: relative; background: var(--panel); border: 1px solid var(--panel-edge);
+  padding: 1.4rem 1.5rem; backdrop-filter: blur(6px);
+  clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+}
+.panel:hover { border-color: rgba(0, 212, 255, 0.6); box-shadow: 0 0 30px rgba(0, 150, 255, 0.16); }
+.panel .ph { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+.panel h3 { color: #eaf7ff; font-size: 1.02rem; letter-spacing: 0.08em; }
+.panel .meta { color: var(--faint); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; }
+
+/* ---------- experience ---------- */
+.xp-item { position: relative; padding-left: 1.6rem; margin-bottom: 2.2rem; }
+.xp-item::before { content: ""; position: absolute; left: 0.34rem; top: 0.5rem; bottom: -1.6rem; width: 1px; background: linear-gradient(180deg, var(--cyan), rgba(0, 212, 255, 0.08)); }
+.xp-item:last-child::before { display: none; }
+.xp-item::after { content: ""; position: absolute; left: 0; top: 0.35rem; width: 0.7rem; height: 0.7rem; border-radius: 50%; background: var(--bg); border: 2px solid var(--cyan); box-shadow: 0 0 12px rgba(0, 212, 255, 0.7); }
+.xp-role { color: var(--cyan-soft); font-size: 0.85rem; letter-spacing: 0.06em; }
+.xp-org { color: #eaf7ff; font-size: 1.08rem; margin: 0.15rem 0 0.1rem; }
+.xp-dates { color: var(--faint); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 0.7rem; }
+.xp-item ul { list-style: none; }
+.xp-item li { position: relative; padding-left: 1.2rem; margin-bottom: 0.4rem; color: var(--dim); font-size: 0.9rem; }
+.xp-item li::before { content: ">"; position: absolute; left: 0; color: var(--cyan); }
+.xp-item li b { color: var(--text); font-weight: 400; }
+
+/* ---------- projects ---------- */
+.cards { display: grid; grid-template-columns: 1fr; gap: 1.2rem; }
+@media (min-width: 760px) { .cards { grid-template-columns: 1fr 1fr; } }
+.card { display: flex; flex-direction: column; gap: 0.7rem; }
+.card:hover { transform: translateY(-4px); }
+.card .glyph { font-size: 1.3rem; color: var(--cyan); text-shadow: 0 0 14px rgba(0, 212, 255, 0.7); }
+.card p { color: var(--dim); font-size: 0.88rem; flex: 1; }
+.card .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.tag { font-size: 0.64rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cyan-soft); border: 1px solid rgba(0, 212, 255, 0.22); padding: 0.16rem 0.55rem; background: rgba(0, 50, 95, 0.25); }
+.card .card-link { font-size: 0.74rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cyan); }
+.card .card-link::after { content: " >>"; }
+.badge-live { color: var(--amber); border-color: rgba(0, 212, 255, 0.45); background: rgba(0, 70, 130, 0.3); }
+.badge-dev { color: var(--cyan-soft); }
+
+/* ---------- skills ---------- */
+.skill-grid { display: grid; grid-template-columns: 1fr; gap: 1.2rem; }
+@media (min-width: 760px) { .skill-grid { grid-template-columns: repeat(3, 1fr); } }
+.skill-group h3 { color: var(--cyan); font-size: 0.78rem; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 0.8rem; }
+.skill-group .tags { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.skill-group .tag { font-size: 0.72rem; padding: 0.3rem 0.7rem; }
+
+/* ---------- hobby ---------- */
+.hobby { font-size: 0.9rem; color: var(--dim); }
+.hobby .panel { display: flex; flex-direction: column; gap: 0.6rem; }
+.hobby a { letter-spacing: 0.05em; }
+
+/* ---------- terminal ---------- */
+.terminal {
+  background: rgba(1, 8, 18, 0.88); border: 1px solid var(--panel-edge);
+  box-shadow: 0 0 44px rgba(0, 120, 220, 0.14), inset 0 0 60px rgba(0, 40, 80, 0.25);
+  clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+}
+.term-bar { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem; border-bottom: 1px solid rgba(0, 212, 255, 0.16); font-size: 0.68rem; letter-spacing: 0.22em; color: var(--faint); text-transform: uppercase; }
+.term-bar .led { width: 9px; height: 9px; border-radius: 50%; }
+.term-bar .g { background: #00d4ff; box-shadow: 0 0 8px #00d4ff; }
+.term-bar .y { background: #2f7bff; box-shadow: 0 0 8px #2f7bff; }
+.term-bar .b { background: #7fe7ff; box-shadow: 0 0 8px #7fe7ff; }
+.term-body { height: 330px; overflow-y: auto; padding: 1rem 1.1rem; font-size: 0.84rem; }
+.term-body::-webkit-scrollbar { width: 6px; }
+.term-body::-webkit-scrollbar-thumb { background: rgba(0, 212, 255, 0.3); }
+.tline { white-space: pre-wrap; word-break: break-word; color: var(--dim); margin-bottom: 0.15rem; }
+.tline.cmd { color: var(--text); }
+.tline .prompt { color: var(--cyan); }
+.tline a { text-decoration: underline; }
+.term-input { display: flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.1rem; border-top: 1px solid rgba(0, 212, 255, 0.16); }
+.term-input .prompt { color: var(--cyan); font-size: 0.84rem; }
+.term-input input {
+  flex: 1; background: transparent; border: 0; outline: 0; color: var(--text);
+  font-family: inherit; font-size: 0.84rem; caret-color: var(--cyan);
+}
+
+/* ---------- contact ---------- */
+.contact-grid { display: grid; grid-template-columns: 1fr; gap: 1.2rem; }
+@media (min-width: 760px) { .contact-grid { grid-template-columns: 1.1fr 0.9fr; } }
+.contact-line { display: flex; justify-content: space-between; gap: 1rem; padding: 0.55rem 0; border-bottom: 1px dashed rgba(0, 212, 255, 0.14); font-size: 0.86rem; }
+.contact-line .k { color: var(--faint); letter-spacing: 0.2em; text-transform: uppercase; font-size: 0.7rem; padding-top: 0.2rem; }
+.avail { margin-top: 1.1rem; color: var(--amber); font-size: 0.8rem; letter-spacing: 0.12em; }
+
+/* ---------- footer ---------- */
+footer { border-top: 1px solid rgba(0, 212, 255, 0.14); padding: 1.6rem clamp(1.1rem, 5vw, 3rem) 2.4rem; text-align: center; color: var(--faint); font-size: 0.7rem; letter-spacing: 0.16em; position: relative; z-index: 1; }
+footer a { color: var(--dim); }
+
+/* ---------- reveal ---------- */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; }
+}
+</style>
 </head>
 <body>
-  <canvas id="precisionCanvas" aria-hidden="true"></canvas>
-  <div class="grain" aria-hidden="true"></div>
 
-  <header class="site-header">
-    <a class="brand-mark" href="#home" aria-label="Nadeem home">
-      <span>N</span>
-      <strong>Nadeem</strong>
-    </a>
-    <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false">
-      <span></span>
-      <span></span>
-    </button>
-    <nav class="site-nav" aria-label="Primary navigation">
-      <a href="#proof">Proof</a>
-      <a href="#projects">AI Work</a>
-      <a href="#stack">Stack</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </header>
+<div id="boot" aria-hidden="true">
+  <div class="boot-inner">
+    <div class="boot-logo">NADEEM.OS</div>
+    <div class="boot-lines" id="bootLines"></div>
+    <div class="boot-bar"><span id="bootBar"></span></div>
+    <div class="boot-skip">PRESS ANY KEY OR TAP TO SKIP</div>
+  </div>
+</div>
 
-  <main>
-    <section class="hero" id="home">
-      <div class="hero-content">
-        <p class="eyebrow">AI Engineer | RAG Systems | LLM Apps</p>
-        <h1>Nadeem</h1>
-        <p class="hero-title">I build AI systems that retrieve, reason, extract, and ship.</p>
-        <p class="hero-copy">
-          I specialize in production-style RAG pipelines, document intelligence, vision AI,
-          conversational analytics, and full-stack interfaces that make model output usable.
-        </p>
-        <div class="hero-actions">
-          <a class="button primary" href="#projects">View AI Work</a>
-          <a class="button ghost" href="resume/Nadeem_resume.pdf" download>Resume</a>
-          <a class="button ghost" href="https://github.com/nadeem9986" target="_blank" rel="noopener">GitHub</a>
-        </div>
-        <div class="hero-meta" aria-label="Profile highlights">
-          <span>LangChain + Pinecone</span>
-          <span>OpenAI Vision Workflows</span>
-          <span>Python + Full-Stack Delivery</span>
-        </div>
-        <div class="availability-strip">
-          <strong>Open to AI Engineer roles</strong>
-          <span>RAG systems</span>
-          <span>LLM apps</span>
-          <span>Document AI</span>
-          <span>AI product backend</span>
-        </div>
+<div class="bg-grid"></div>
+<div class="sweep"></div>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+
+<header class="nav">
+  <a class="nav-brand" href="#top"><span class="dot"></span>NADEEM.OS</a>
+  <nav class="nav-links" aria-label="Primary">
+    <span class="nav-status">SYS.ONLINE</span>
+    <a href="#experience">Experience</a>
+    <a href="#projects">Projects</a>
+    <a href="#skills">Skills</a>
+    <a href="#terminal">Terminal</a>
+    <a href="#contact">Contact</a>
+    <a class="btn solid" href="resume/Nadeem_resume.pdf" target="_blank" rel="noopener">Resume</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="reactor-wrap reveal in">
+      <div class="reactor" role="img" aria-label="Animated arc reactor">
+        <div class="ring r1"></div>
+        <div class="ring r2"></div>
+        <div class="ticks" id="ticks"></div>
+        <div class="ring r3"></div>
+        <div class="ring r4"></div>
+        <div class="housing"></div>
+        <div class="core"></div>
+        <div class="tri"></div>
       </div>
-
-      <div class="hero-logo-card">
-        <img class="hero-logo" src="images/nadeem-metal-logo.png" alt="Metallic Nadeem monogram logo" />
+    </div>
+    <div class="hero-copy">
+      <p class="kicker">// Portfolio Interface v2.1</p>
+      <h1>NADEEM <span>A</span></h1>
+      <p class="hero-role">SOFTWARE ENGINEER — I build <span id="typed"></span><span class="cursor">_</span></p>
+      <p class="hero-sub">Software engineer in Bengaluru who uses AI to ship faster. I design and build production web interfaces, Android apps and the plumbing that deploys them.</p>
+      <div class="hero-ctas">
+        <a class="btn solid" href="#projects">View Projects</a>
+        <a class="btn" href="#terminal">Open Terminal</a>
+        <a class="btn" href="https://github.com/nadeem9986" target="_blank" rel="noopener">GitHub</a>
       </div>
-    </section>
-
-    <section class="section intro" id="proof">
-      <div class="section-kicker">Hiring Signal</div>
-      <div class="intro-grid">
-        <div>
-          <h2>AI engineering proof, not buzzwords.</h2>
-          <p>
-            Hiring teams need to see whether an AI engineer can define the system boundary,
-            connect models to real data, handle failures, and ship a usable product. This
-            portfolio is organized around those signals.
-          </p>
-        </div>
-        <div class="signal-panel">
-          <div><span>Target Role</span><strong>AI Engineer / GenAI Engineer</strong></div>
-          <div><span>Core Proof</span><strong>RAG, document extraction, LLM interfaces</strong></div>
-          <div><span>Delivery</span><strong>Python, Flask, Streamlit, APIs, web UI</strong></div>
-          <div><span>Edge</span><strong>Full-stack + embedded systems breadth</strong></div>
-        </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="num">8+</div><div class="lbl">Product UIs shipped</div></div>
+        <div class="stat"><div class="num">24</div><div class="lbl">Public repos</div></div>
+        <div class="stat"><div class="num">1</div><div class="lbl">Live client site</div></div>
       </div>
+    </div>
+  </section>
 
-      <div class="proof-grid">
-        <article>
-          <span>01</span>
-          <h3>Retrieval-Augmented Generation</h3>
-          <p>Projects show document ingestion, vector search, grounded answers, and source-aware AI workflows.</p>
-        </article>
-        <article>
-          <span>02</span>
-          <h3>LLM Document Intelligence</h3>
-          <p>Vision and extraction pipelines turn messy financial or legal documents into structured outputs.</p>
-        </article>
-        <article>
-          <span>03</span>
-          <h3>Productized AI Interfaces</h3>
-          <p>Flask, Streamlit, Chart.js, and responsive UI work make AI tools usable outside notebooks.</p>
-        </article>
+  <section id="experience">
+    <span class="sec-tag reveal">01 // Experience</span>
+    <h2 class="reveal">Work <span class="slash">/</span> Log</h2>
+
+    <div class="xp-item reveal">
+      <div class="xp-role">Software engineering — full-time</div>
+      <div class="xp-org">SmiRox Ventures LLP</div>
+      <div class="xp-dates">Apr 2026 — Present</div>
+      <ul>
+        <li>Redesign and build <b>FamEase product UIs across ~8 domains and subdomains</b> with plain HTML, CSS and JavaScript.</li>
+        <li>Built the <b>smirox.com</b> company website UI.</li>
+        <li>Ship interface changes through the company's <b>CI/CD pipeline</b>.</li>
+      </ul>
+    </div>
+
+    <div class="xp-item reveal">
+      <div class="xp-role">Intern</div>
+      <div class="xp-org">SmiRox Ventures LLP</div>
+      <div class="xp-dates">Mar 2026 — Apr 2026</div>
+      <ul>
+        <li>Started on the FamEase UI rebuild; converted to full-time after the first month.</li>
+      </ul>
+    </div>
+
+    <div class="xp-item reveal">
+      <div class="xp-role">Freelance web developer</div>
+      <div class="xp-org">Only Apple Tech</div>
+      <div class="xp-dates">Dec 2025 — Jan 2026</div>
+      <ul>
+        <li>Designed and built the company website, live at <a href="https://onlyappletech.in" target="_blank" rel="noopener">onlyappletech.in</a>.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="projects">
+    <span class="sec-tag reveal">02 // Projects</span>
+    <h2 class="reveal">Selected <span class="slash">/</span> Builds</h2>
+    <div class="cards">
+      <div class="panel card reveal">
+        <div class="ph"><h3><span class="glyph">&#9670;</span> Dreamlock</h3><span class="tag badge-dev">In development</span></div>
+        <p>Android digital-wellbeing app that locks distracting apps so goals come first. 100% offline, zero data collection.</p>
+        <div class="tags"><span class="tag">Kotlin</span><span class="tag">Jetpack Compose</span><span class="tag">Android</span></div>
+        <a class="card-link" href="https://github.com/nadeem9986/Dreamlock" target="_blank" rel="noopener">Repository</a>
       </div>
-
-      <div class="review-panel">
-        <div>
-          <span>What a reviewer should see in 60 seconds</span>
-          <h3>Not another chatbot wrapper.</h3>
-        </div>
-        <ul>
-          <li>AI projects solve document, retrieval, and analysis problems.</li>
-          <li>Repositories are linked directly for code inspection.</li>
-          <li>Each featured project states the system boundary and hiring signal.</li>
-          <li>Full-stack delivery proves the model work can become usable software.</li>
-        </ul>
+      <div class="panel card reveal">
+        <div class="ph"><h3><span class="glyph">&#9670;</span> Only Apple Tech</h3><span class="tag badge-live">Live</span></div>
+        <p>Company website for an Apple-device repair and sales shop. Designed, built and shipped as a freelance engagement.</p>
+        <div class="tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span></div>
+        <a class="card-link" href="https://onlyappletech.in" target="_blank" rel="noopener">Visit site</a>
       </div>
-    </section>
-
-    <section class="section projects-section" id="projects">
-      <div class="section-kicker">AI Proof Of Work</div>
-      <div class="section-head">
-        <h2>Selected AI projects.</h2>
-        <p>Curated for recruiter and engineering review: real problems, inspectable repositories, clear system boundaries, and production-style decisions.</p>
+      <div class="panel card reveal">
+        <div class="ph"><h3><span class="glyph">&#9670;</span> Legal AI RAG Assistant</h3></div>
+        <p>RAG chatbot over real legal documents with sourced answers. LangChain orchestration, OpenAI embeddings, Pinecone vector store.</p>
+        <div class="tags"><span class="tag">Python</span><span class="tag">LangChain</span><span class="tag">Pinecone</span></div>
+        <a class="card-link" href="https://github.com/nadeem9986/legal-ai-rag-assistant" target="_blank" rel="noopener">Repository</a>
       </div>
-
-      <div class="filter-strip" aria-label="Project filters">
-        <button class="filter active" type="button" data-filter="all">All</button>
-        <button class="filter" type="button" data-filter="ai">AI</button>
-        <button class="filter" type="button" data-filter="rag">RAG</button>
-        <button class="filter" type="button" data-filter="vision">Vision</button>
-        <button class="filter" type="button" data-filter="analytics">Analytics</button>
-        <button class="filter" type="button" data-filter="systems">Systems</button>
+      <div class="panel card reveal">
+        <div class="ph"><h3><span class="glyph">&#9670;</span> InsightFlow</h3></div>
+        <p>Upload a CSV, query it in plain English. Conversational data analysis with a liquid-glass UI.</p>
+        <div class="tags"><span class="tag">Python</span><span class="tag">LangChain</span><span class="tag">GPT-4o-mini</span></div>
+        <a class="card-link" href="https://github.com/nadeem9986/InsightFlow-CSV-Analyzer" target="_blank" rel="noopener">Repository</a>
       </div>
+    </div>
+  </section>
 
-      <div class="project-grid selected-grid">
-        <article class="project-card featured" data-category="ai vision rag">
-          <div class="project-topline"><span>Signature AI Project</span><span>Python | Flask | OpenAI Vision | LangChain</span></div>
-          <h3>Credit Card AI Analyzer</h3>
-          <p>Document intelligence app that uses vision AI to parse credit card statements, extract billing metadata, and turn raw statement data into readable financial summaries.</p>
-          <dl class="case-points">
-            <div><dt>Problem</dt><dd>Financial documents are messy, visual, and hard to convert into structured user-facing data.</dd></div>
-            <div><dt>AI Signal</dt><dd>Shows multimodal extraction, LLM orchestration, prompt boundaries, and app delivery.</dd></div>
-          </dl>
-          <div class="project-tags"><span>GPT-4o Vision</span><span>LangChain</span><span>Document Parsing</span><span>Finance</span></div>
-          <a href="https://github.com/nadeem9986/cardmgmt" target="_blank" rel="noopener">Open Repository</a>
-        </article>
-
-        <article class="project-card featured" data-category="ai rag">
-          <div class="project-topline"><span>RAG Architecture</span><span>Python | Streamlit | Pinecone | LangChain</span></div>
-          <h3>Legal AI RAG Assistant</h3>
-          <p>Document-grounded assistant that retrieves legal context from vector storage and answers through a retrieval-first architecture built for traceable outputs.</p>
-          <dl class="case-points">
-            <div><dt>Problem</dt><dd>Legal Q&A needs grounded context instead of generic model responses.</dd></div>
-            <div><dt>AI Signal</dt><dd>Shows vector search, retrieval design, answer grounding, and source-oriented UX.</dd></div>
-          </dl>
-          <div class="project-tags"><span>RAG</span><span>Pinecone</span><span>LegalTech</span><span>Streamlit</span></div>
-          <a href="https://github.com/nadeem9986/legal-ai-rag-assistant" target="_blank" rel="noopener">Open Repository</a>
-        </article>
-
-        <article class="project-card" data-category="ai analytics">
-          <div class="project-topline"><span>AI Data Analyst</span><span>Python | Flask | Pandas | Chart.js</span></div>
-          <h3>InsightFlow CSV Analyzer</h3>
-          <p>Conversational analytics tool for uploaded CSV files, translating plain-English questions into statistics, summaries, and dynamic charts.</p>
-          <div class="project-tags"><span>Data Agent</span><span>Pandas</span><span>Charts</span><span>Flask</span></div>
-          <a href="https://github.com/nadeem9986/InsightFlow-CSV-Analyzer" target="_blank" rel="noopener">Open Repository</a>
-        </article>
-
-        <article class="project-card" data-category="systems">
-          <div class="project-topline"><span>AI-Adjacent Systems</span><span>C++ | ESP32 | FreeRTOS</span></div>
-          <h3>ESP32 4-DOF Robot Arm</h3>
-          <p>Robotics control software with dual-core task design, servo control, inverse kinematics, telemetry, and a browser-based control interface.</p>
-          <div class="project-tags"><span>Robotics</span><span>Control Systems</span><span>Telemetry</span></div>
-          <a href="https://github.com/nadeem9986/c-robot-arm" target="_blank" rel="noopener">Open Repository</a>
-        </article>
-
-        <article class="project-card" data-category="systems">
-          <div class="project-topline"><span>Product Engineering</span><span>Static Site | Firmware Flow</span></div>
-          <h3>Udaan Aviation</h3>
-          <p>Drone engineering product site with firmware download flow, component presentation, product actions, and responsive UI delivery.</p>
-          <div class="project-tags"><span>Drones</span><span>Firmware</span><span>Product UI</span></div>
-          <a href="https://github.com/nadeem9986/udaan-aviation" target="_blank" rel="noopener">Open Repository</a>
-        </article>
+  <section id="skills">
+    <span class="sec-tag reveal">03 // Skills</span>
+    <h2 class="reveal">Tech <span class="slash">/</span> Arsenal</h2>
+    <div class="skill-grid">
+      <div class="panel skill-group reveal">
+        <h3>Frontend</h3>
+        <div class="tags"><span class="tag">React</span><span class="tag">JavaScript</span><span class="tag">HTML5</span><span class="tag">CSS3</span><span class="tag">Tailwind</span><span class="tag">Figma</span></div>
       </div>
-
-      <div class="more-builds">
-        <h3>More builds</h3>
-        <div class="build-list">
-          <a class="build-row" data-category="ai web" href="https://github.com/nadeem9986/InsightFlow-CSV-Analyzer" target="_blank" rel="noopener">
-            <span>InsightFlow CSV Analyzer</span><small>Conversational analytics | Python, Pandas, Chart.js</small>
-          </a>
-          <a class="build-row" data-category="systems" href="https://github.com/nadeem9986/RoboEyes-ESP32-Full-Web-Dashboard" target="_blank" rel="noopener">
-            <span>RoboEyes ESP32 Dashboard</span><small>Embedded web control | ESP32, OLED, WebSockets</small>
-          </a>
-          <a class="build-row" data-category="systems" href="https://github.com/nadeem9986/esp-drone" target="_blank" rel="noopener">
-            <span>ESP Drone</span><small>Flight firmware exploration | ESP-IDF, ESP32</small>
-          </a>
-          <a class="build-row" data-category="systems" href="https://github.com/nadeem9986/velaryn-website" target="_blank" rel="noopener">
-            <span>Rescue Call Emergency System</span><small>HealthTech emergency workflows | React Native, Firebase</small>
-          </a>
-          <a class="build-row" data-category="systems" href="https://github.com/nadeem9986/sub-dash" target="_blank" rel="noopener">
-            <span>Subscription Dashboard</span><small>Operational dashboard UI | HTML, CSS, JavaScript</small>
-          </a>
+      <div class="panel skill-group reveal">
+        <h3>Backend &amp; Data</h3>
+        <div class="tags"><span class="tag">Node.js</span><span class="tag">Express</span><span class="tag">REST APIs</span><span class="tag">MongoDB</span><span class="tag">MySQL</span></div>
+      </div>
+      <div class="panel skill-group reveal">
+        <h3>Platform &amp; Tools</h3>
+        <div class="tags"><span class="tag">Git / GitHub</span><span class="tag">CI/CD</span><span class="tag">Docker</span><span class="tag">Linux</span><span class="tag">LLM API integration</span></div>
+      </div>
+      <div class="panel skill-group reveal">
+        <h3>Mobile</h3>
+        <div class="tags"><span class="tag">Kotlin</span><span class="tag">Jetpack Compose</span><span class="tag">Room</span></div>
+      </div>
+      <div class="panel skill-group reveal hobby">
+        <h3>Hobby Lab — Robotics</h3>
+        <p>Weekend bench: ESP32 firmware, a 4-DOF robot arm with analytic IK, and browser-controlled OLED robot eyes.</p>
+        <div class="tags">
+          <a class="tag" href="https://github.com/nadeem9986/c-robot-arm" target="_blank" rel="noopener">c-robot-arm</a>
+          <a class="tag" href="https://github.com/nadeem9986/RoboEyes-ESP32-Full-Web-Dashboard" target="_blank" rel="noopener">RoboEyes</a>
+          <a class="tag" href="https://github.com/nadeem9986/esp32-cam-module-working-code" target="_blank" rel="noopener">ESP32-CAM</a>
         </div>
       </div>
-
-      <div class="project-grid archive-grid" aria-hidden="true">
-        <article class="project-card is-hidden" data-category="ai web">
-          <div class="project-topline"><span>Data Product</span><span>Python | Pandas | Chart.js</span></div>
-          <h3>InsightFlow CSV Analyzer</h3>
-          <p>Conversational analytics tool for uploaded CSV files, translating plain-English questions into statistics, summaries, and dynamic data visualizations.</p>
-          <div class="project-tags"><span>Analytics</span><span>Charts</span><span>Flask</span></div>
-          <a href="https://github.com/nadeem9986/InsightFlow-CSV-Analyzer" target="_blank" rel="noopener">Open Repository</a>
-        </article>
-
-        <article class="project-card is-hidden" data-category="hardware">
-          <div class="project-topline"><span>Flight Systems</span><span>ESP-IDF | C</span></div>
-          <h3>ESP Drone</h3>
-          <p>ESP32-based drone firmware exploration, touching Wi-Fi control, flight modes, sensor expansion, and Crazyflie-inspired embedded flight architecture.</p>
-          <div class="project-tags"><span>Drone</span><span>ESP32</span><span>Firmware</span></div>
-          <a href="https://github.com/nadeem9986/esp-drone" target="_blank" rel="noopener">Open Repository</a>
-        </article>
-
-        <article class="project-card is-hidden" data-category="web product">
-          <div class="project-topline"><span>HealthTech</span><span>React Native | Firebase</span></div>
-          <h3>Rescue Call Emergency System</h3>
-          <p>Emergency communication platform concept with real-time location dispatching, ambulance route alerts, and mobile-first crisis workflows.</p>
-          <div class="project-tags"><span>Mobile</span><span>Firebase</span><span>Node.js</span></div>
-          <a href="https://github.com/nadeem9986/velaryn-website" target="_blank" rel="noopener">Open Repository</a>
-        </article>
-
-        <article class="project-card is-hidden" data-category="web">
-          <div class="project-topline"><span>Dashboard</span><span>HTML | UI Systems</span></div>
-          <h3>Subscription Dashboard</h3>
-          <p>Static dashboard interface focused on subscription visibility, product polish, and clean operational UI patterns for browser-first tools.</p>
-          <div class="project-tags"><span>Dashboard</span><span>Static App</span><span>UX</span></div>
-          <a href="https://github.com/nadeem9986/sub-dash" target="_blank" rel="noopener">Open Repository</a>
-        </article>
+      <div class="panel skill-group reveal">
+        <h3>Currently Leveling Up</h3>
+        <div class="tags"><span class="tag">Android internals</span><span class="tag">Agentic AI systems</span><span class="tag">System design</span></div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="section stack-section" id="stack">
-      <div class="section-kicker">Core Stack</div>
-      <div class="stack-grid">
-        <div class="stack-card">
-          <span>01</span>
-          <h3>LLM & RAG Engineering</h3>
-          <p>LangChain, Pinecone, OpenAI vision workflows, chunking, retrieval design, prompt control, document parsing, and grounded answers.</p>
-        </div>
-        <div class="stack-card">
-          <span>02</span>
-          <h3>AI Product Backend</h3>
-          <p>Python, Flask, Streamlit, REST APIs, Pandas, JSON extraction, data validation, file upload flows, and deployable app structure.</p>
-        </div>
-        <div class="stack-card">
-          <span>03</span>
-          <h3>Full-Stack Delivery</h3>
-          <p>React, Node.js, Express, MongoDB, Docker, responsive UX, dashboards, and interfaces that make AI outputs useful to humans.</p>
+  <section id="terminal">
+    <span class="sec-tag reveal">04 // Terminal</span>
+    <h2 class="reveal">Talk <span class="slash">/</span> To The Machine</h2>
+    <div class="terminal reveal">
+      <div class="term-bar"><span class="led g"></span><span class="led y"></span><span class="led b"></span><span style="margin-left:0.6rem">guest@n4deem.site — hud-shell</span></div>
+      <div class="term-body" id="termBody"></div>
+      <div class="term-input">
+        <span class="prompt">guest@n4deem:~$</span>
+        <input id="termInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal input" placeholder="type 'help' and hit enter" />
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <span class="sec-tag reveal">05 // Contact</span>
+    <h2 class="reveal">Open <span class="slash">/</span> Channel</h2>
+    <div class="contact-grid">
+      <div class="panel reveal">
+        <div class="contact-line"><span class="k">Email</span><a href="mailto:nadeemise2025@gmail.com">nadeemise2025@gmail.com</a></div>
+        <div class="contact-line"><span class="k">GitHub</span><a href="https://github.com/nadeem9986" target="_blank" rel="noopener">github.com/nadeem9986</a></div>
+        <div class="contact-line"><span class="k">LinkedIn</span><a href="https://www.linkedin.com/in/nadeem-233a46256" target="_blank" rel="noopener">nadeem-233a46256</a></div>
+        <div class="contact-line"><span class="k">Base</span><span>Bengaluru, India</span></div>
+        <p class="avail">STATUS: OPEN TO SOFTWARE ENGINEER ROLES</p>
+      </div>
+      <div class="panel reveal">
+        <h3 style="margin-bottom:0.6rem">Recruiter shortcut</h3>
+        <p style="color:var(--dim);font-size:0.88rem">One page, no animations: my resume has the same story in plain text.</p>
+        <div class="hero-ctas" style="margin-top:1.2rem">
+          <a class="btn solid" href="resume/Nadeem_resume.pdf" target="_blank" rel="noopener">Download Resume</a>
+          <a class="btn" href="mailto:nadeemise2025@gmail.com">Say Hello</a>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="section contact-section" id="contact">
-      <div class="contact-panel">
-        <div>
-          <div class="section-kicker">Contact Channel</div>
-          <h2>Hiring for AI engineering?</h2>
-          <p>I am open to AI Engineer, GenAI Engineer, RAG Engineer, and full-stack AI product roles.</p>
-        </div>
-        <form class="contact-form" id="contactForm">
-          <label>
-            Name
-            <input id="cf-name" type="text" autocomplete="name" required />
-          </label>
-          <label>
-            Email
-            <input id="cf-email" type="email" autocomplete="email" required />
-          </label>
-          <label>
-            Message
-            <textarea id="cf-message" rows="4" required></textarea>
-          </label>
-          <button class="button primary" type="submit">Send Message</button>
-          <p class="form-note" id="formNote" role="status"></p>
-        </form>
-      </div>
+</main>
 
-      <div class="contact-links">
-        <a href="mailto:nadeemise2025@gmail.com">nadeemise2025@gmail.com</a>
-        <a href="https://www.linkedin.com/in/nadeem-233a46256/" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="https://github.com/nadeem9986" target="_blank" rel="noopener">GitHub</a>
-        <a href="tel:+919986491156">+91 9986491156</a>
-      </div>
-    </section>
-  </main>
+<footer>
+  <p>© 2026 NADEEM — BUILT WITH HTML, CSS &amp; JAVASCRIPT · TYPE SET IN <a href="https://departuremono.com" target="_blank" rel="noopener">DEPARTURE MONO</a> (SIL OFL) · POWERED BY AN ARC REACTOR</p>
+</footer>
 
-  <footer class="site-footer">
-    <span>Nadeem</span>
-    <span>Build | Explore | Create</span>
-    <span>2026</span>
-  </footer>
+<script>
+(function () {
+  "use strict";
 
-  <script src="assets/js/portfolio.js"></script>
+  /* reactor ticks */
+  var ticks = document.getElementById("ticks");
+  if (ticks) {
+    for (var i = 0; i < 24; i++) {
+      var t = document.createElement("i");
+      t.style.transform = "rotate(" + (i * 15) + "deg)";
+      ticks.appendChild(t);
+    }
+  }
+
+  /* boot sequence */
+  var boot = document.getElementById("boot");
+  var bootLines = document.getElementById("bootLines");
+  var bootBar = document.getElementById("bootBar");
+  var lines = [
+    "> NADEEM.OS // HUD INTERFACE v2.1",
+    "> Initializing power core ............ OK",
+    "> Igniting arc reactor ............... OK",
+    "> Loading holographic interface ...... OK",
+    "> Syncing GitHub profile ............. OK",
+    "> Systems nominal. Welcome, boss."
+  ];
+  var bootDone = false;
+  function finishBoot() {
+    if (bootDone) return;
+    bootDone = true;
+    boot.classList.add("done");
+    try { sessionStorage.setItem("nos-booted", "1"); } catch (e) {}
+  }
+  var already = false;
+  try { already = sessionStorage.getItem("nos-booted") === "1"; } catch (e) {}
+  if (already) {
+    finishBoot();
+  } else {
+    var li = 0;
+    var timer = setInterval(function () {
+      if (bootDone) { clearInterval(timer); return; }
+      if (li < lines.length) {
+        var d = document.createElement("div");
+        d.textContent = lines[li];
+        if (li === lines.length - 1) d.className = "ok";
+        bootLines.appendChild(d);
+        bootBar.style.width = Math.round(((li + 1) / lines.length) * 100) + "%";
+        li++;
+      } else {
+        clearInterval(timer);
+        setTimeout(finishBoot, 650);
+      }
+    }, 340);
+    window.addEventListener("keydown", finishBoot, { once: true });
+    boot.addEventListener("click", finishBoot);
+    setTimeout(finishBoot, 5200);
+  }
+
+  /* typed headline */
+  var typed = document.getElementById("typed");
+  var phrases = ["production web interfaces.", "fast, clean UIs.", "AI-assisted workflows.", "Android apps."];
+  var pi = 0, ci = 0, deleting = false;
+  function tick() {
+    if (!typed) return;
+    var word = phrases[pi];
+    typed.textContent = word.slice(0, ci);
+    if (!deleting) {
+      if (ci < word.length) { ci++; setTimeout(tick, 55); }
+      else { deleting = true; setTimeout(tick, 1800); }
+    } else {
+      if (ci > 0) { ci--; setTimeout(tick, 28); }
+      else { deleting = false; pi = (pi + 1) % phrases.length; setTimeout(tick, 350); }
+    }
+  }
+  tick();
+
+  /* reveal on scroll */
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll(".reveal").forEach(function (el) { io.observe(el); });
+
+  /* terminal */
+  var body = document.getElementById("termBody");
+  var input = document.getElementById("termInput");
+  var history = [], hIdx = -1;
+  function print(text, cls) {
+    var d = document.createElement("div");
+    d.className = "tline" + (cls ? " " + cls : "");
+    d.innerHTML = text;
+    body.appendChild(d);
+    body.scrollTop = body.scrollHeight;
+  }
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  var CMDS = {
+    help: "Available commands:\n  about        who is Nadeem\n  experience   work history\n  projects     selected builds\n  skills       tech arsenal\n  contact      open a channel\n  resume       download the resume\n  github       open GitHub profile\n  linkedin     open LinkedIn\n  jarvis       ...\n  clear        wipe the screen",
+    about: "Nadeem — software engineer based in Bengaluru, India.\nBuilds production web interfaces, Android apps and AI-assisted workflows.\nSoftware engineering at SmiRox Ventures LLP. Robotics on weekends, as a hobby.",
+    experience: "SmiRox Ventures LLP\n  Software engineering (full-time)   Apr 2026 - Present\n  Intern                             Mar 2026 - Apr 2026\n  > FamEase product UIs across ~8 domains/subdomains (HTML/CSS/JS)\n  > smirox.com company site UI · ships via company CI/CD\n\nOnly Apple Tech — freelance\n  Dec 2025 - Jan 2026\n  > Company website, live at https://onlyappletech.in",
+    projects: "Dreamlock ............ Android wellbeing app · Kotlin + Jetpack Compose (in dev)\nOnly Apple Tech ...... live client site · https://onlyappletech.in\nLegal AI RAG ......... legal-doc chatbot · LangChain + Pinecone\nInsightFlow .......... chat with CSVs · LangChain + GPT-4o-mini\n\ntype 'github' for the full repo list",
+    skills: "Frontend .. React · JavaScript · HTML5 · CSS3 · Tailwind · Figma\nBackend ... Node.js · Express · REST APIs\nData ...... MongoDB · MySQL\nPlatform .. Git/GitHub · CI/CD · Docker · Linux · LLM API integration\nMobile .... Kotlin · Jetpack Compose · Room",
+    contact: "email .... nadeemise2025@gmail.com\ngithub ... https://github.com/nadeem9986\nlinkedin . https://www.linkedin.com/in/nadeem-233a46256\nbase ..... Bengaluru, India\nstatus ... OPEN TO SOFTWARE ENGINEER ROLES",
+    jarvis: "At your service, sir.\n(All systems nominal. Arc reactor output steady. Resume is one command away: 'resume')",
+    sudo: "Nice try. This incident will be reported to the boss.",
+    banner: "NADEEM.OS // HUD INTERFACE v2.1 — type 'help'"
+  };
+  function run(raw) {
+    var cmdline = raw.trim();
+    print('<span class="prompt">guest@n4deem:~$</span> ' + esc(cmdline), "cmd");
+    if (!cmdline) return;
+    history.unshift(cmdline); hIdx = -1;
+    var cmd = cmdline.toLowerCase().split(/\s+/)[0];
+    if (cmd === "clear") { body.innerHTML = ""; return; }
+    if (cmd === "resume") { print("Opening resume/Nadeem_resume.pdf ..."); window.open("resume/Nadeem_resume.pdf", "_blank"); return; }
+    if (cmd === "github") { print("Opening github.com/nadeem9986 ..."); window.open("https://github.com/nadeem9986", "_blank"); return; }
+    if (cmd === "linkedin") { print("Opening LinkedIn ..."); window.open("https://www.linkedin.com/in/nadeem-233a46256", "_blank"); return; }
+    if (CMDS[cmd]) { print(esc(CMDS[cmd]).replace(/\n/g, "<br>")); return; }
+    print("command not found: " + esc(cmd) + " — type 'help'");
+  }
+  print(esc(CMDS.banner));
+  print(" ");
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { run(input.value); input.value = ""; }
+    else if (e.key === "ArrowUp") { e.preventDefault(); if (hIdx < history.length - 1) { hIdx++; input.value = history[hIdx]; } }
+    else if (e.key === "ArrowDown") { e.preventDefault(); if (hIdx > 0) { hIdx--; input.value = history[hIdx]; } else { hIdx = -1; input.value = ""; } }
+  });
+  document.querySelector(".terminal").addEventListener("click", function () { input.focus(); });
+})();
+</script>
 </body>
 </html>
