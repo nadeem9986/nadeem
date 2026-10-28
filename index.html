@@ -28,7 +28,7 @@
   font-style: normal;
   font-display: swap;
 }
-:root {
+:root, [data-flip-theme="dark"] {
   --bg: #0a0a0a;
   --bg2: #101010;
   --panel: rgba(255, 255, 255, 0.028);
@@ -61,7 +61,7 @@
   --led-on: #dcdcdc;
   --caret: #ffffff;
 }
-[data-theme="light"] {
+[data-theme="light"], [data-flip-theme="light"] {
   --bg: #f4f4f4;
   --bg2: #eaeaea;
   --panel: rgba(0, 0, 0, 0.03);
@@ -362,6 +362,17 @@ footer a { color: var(--dim); }
 @media (prefers-reduced-motion: reduce) {
   .grid-flip-layer { display: none !important; }
 }
+
+/* Visible content gets its own pre-painted, two-sided compositor layer.
+   Copies are inert and short-lived; the real controls keep their state. */
+.content-flip-layer { position: fixed; inset: 0; z-index: 60; pointer-events: none; contain: strict; }
+.content-flip-card { position: absolute; transform-style: preserve-3d; will-change: transform; }
+.content-flip-face { position: absolute; inset: 0; backface-visibility: hidden; color: var(--ink); background: var(--bg); }
+.content-flip-face.back { transform: rotateX(180deg); }
+.content-flip-face > div > * { margin: 0 !important; width: 100% !important; height: 100% !important; transform: none !important; opacity: 1 !important; visibility: visible !important; }
+.content-flip-face *, .content-flip-face *::before, .content-flip-face *::after { transition: none !important; animation: none !important; backdrop-filter: none !important; }
+.theme-flip-source { visibility: hidden !important; }
+.theme-flipping *, .theme-flipping *::before, .theme-flipping *::after { transition: none !important; }
 
 /* square dots (no circles) */
 .nav-brand .dot { border-radius: 2px; }
@@ -799,32 +810,96 @@ footer a { color: var(--dim); }
       }
     }
     layer.appendChild(fragment);
+    var contentLayer = document.createElement('div');
+    contentLayer.className = 'content-flip-layer';
+    contentLayer.setAttribute('aria-hidden', 'true');
+    contentLayer.inert = true;
+    var oldTheme = oldLight ? 'light' : 'dark';
+    var selector = '.hero-copy, .panel, .xp-item, .terminal, section > h2, section > .sec-tag, footer, .nav-brand, .nav-links > *';
+    var content = [];
+    // Measure first, then write: no per-card forced layout loop.
+    document.querySelectorAll(selector).forEach(function (element) {
+      if (element.closest('.panel, .terminal') !== element && element.closest('.panel, .terminal')) return;
+      var rect = element.getBoundingClientRect();
+      if (!rect.width || !rect.height || rect.bottom <= 0 || rect.top >= innerHeight || rect.right <= 0 || rect.left >= innerWidth || getComputedStyle(element).visibility === 'hidden') return;
+      content.push({ source: element, rect: rect });
+    });
+    content.forEach(function (item) {
+      var card = document.createElement('div'), rect = item.rect;
+      card.className = 'content-flip-card';
+      card.style.cssText = 'left:' + rect.left + 'px;top:' + rect.top + 'px;width:' + rect.width + 'px;height:' + rect.height + 'px';
+      [oldTheme, next].forEach(function (theme, i) {
+        var face = document.createElement('div');
+        face.className = 'content-flip-face' + (i ? ' back' : '');
+        face.setAttribute('data-flip-theme', theme);
+        var copy = item.source.cloneNode(true);
+        copy.removeAttribute('id');
+        if (item.source === btn) {
+          copy.querySelector('#themeLabel').textContent = theme === 'dark' ? 'LIGHT' : 'DARK';
+          copy.disabled = false;
+        }
+        copy.querySelectorAll('[id]').forEach(function (node) { node.removeAttribute('id'); });
+        // Inline transforms from reveal/hover must never flatten the two faces.
+        copy.style.transition = 'none';
+        var context = document.createElement('div');
+        context.className = item.source.parentElement.className;
+        context.style.display = 'contents';
+        context.appendChild(copy);
+        face.appendChild(context);
+        card.appendChild(face);
+      });
+      contentLayer.appendChild(card);
+      item.element = card;
+    });
     btn.disabled = true;
     document.body.appendChild(layer);
+    document.body.appendChild(contentLayer);
+    content.forEach(function (item) { item.source.classList.add('theme-flip-source'); });
+    // Do the single real theme repaint BEFORE motion. The copies already carry
+    // both palettes, so no colors, borders, shadows or filters animate.
+    root.classList.add('theme-flipping');
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    paint(next);
     var direction = next === 'light' ? 1 : -1;
-    // Let Chrome rasterize the faces before starting the compositor animation.
+    var animations = [], finished = false;
+    function finish() {
+      if (finished) return;
+      finished = true;
+      animations.forEach(function (animation) { animation.cancel(); });
+      content.forEach(function (item) { item.source.classList.remove('theme-flip-source'); });
+      layer.remove(); contentLayer.remove(); btn.disabled = false;
+      root.classList.remove('theme-flipping');
+      window.removeEventListener('resize', finish);
+      window.removeEventListener('scroll', finish);
+      window.removeEventListener('pagehide', finish);
+    }
+    window.addEventListener('resize', finish, { once: true });
+    window.addEventListener('scroll', finish, { once: true, passive: true });
+    window.addEventListener('pagehide', finish, { once: true });
+    // Two frames allow both old/new faces to rasterize before rotation starts.
     requestAnimationFrame(function () { requestAnimationFrame(function () {
-      root.setAttribute('data-theme', next);
-      try { localStorage.setItem('theme', next); } catch (e) {}
-      paint(next);
+      if (finished) return;
       var spread = 220, diagonal = Math.max(1, rows + cols - 2);
-      var animations = tiles.map(function (item) {
-        return item.element.animate([
-          { transform: 'perspective(700px) rotateX(0deg)' },
-          { transform: 'perspective(700px) rotateX(' + (direction * 180) + 'deg)' }
-        ], {
-          duration: 560,
-          delay: (item.row + item.col) / diagonal * spread,
-          easing: 'cubic-bezier(.4,0,.2,1)',
-          fill: 'both'
-        });
+      function rotate(element, delay, perspective) {
+        perspective = perspective || 900;
+        return element.animate([
+          { transform: 'perspective(' + perspective + 'px) rotateX(0deg)' },
+          { transform: 'perspective(' + perspective + 'px) rotateX(' + (direction * 180) + 'deg)' }
+        ], { duration: 560, delay: delay, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'both' });
+      }
+      animations = tiles.map(function (item) {
+        return rotate(item.element, (item.row + item.col) / diagonal * spread, 700);
+      });
+      content.forEach(function (item) {
+        var rect = item.rect;
+        var row = Math.max(0, Math.min(rows - 1, (rect.top + rect.height / 2) / size));
+        var col = Math.max(0, Math.min(cols - 1, (rect.left + rect.width / 2) / size));
+        animations.push(rotate(item.element, (row + col) / diagonal * spread));
       });
       Promise.all(animations.map(function (animation) {
         return animation.finished.catch(function () {});
-      })).then(function () {
-        layer.remove();
-        btn.disabled = false;
-      });
+      })).then(finish);
     }); });
   }
   btn.addEventListener('click', function () {
