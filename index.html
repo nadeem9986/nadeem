@@ -176,6 +176,18 @@ a:hover { color: var(--white); text-decoration: underline; text-underline-offset
 .nav-links a:hover { color: var(--white); }
 .nav-status { color: var(--faint); font-size: 0.68rem; letter-spacing: 0.2em; display: none; }
 @media (min-width: 900px) { .nav-status { display: inline; } }
+@media (max-width: 600px) {
+  .nav { gap: 1rem; }
+  .nav-brand { flex: 0 0 auto; margin-right: 0.25rem; }
+  .nav-links {
+    flex: 1 1 0; min-width: 0; justify-content: flex-start; gap: 1.1rem;
+    overflow-x: auto; overflow-y: hidden; white-space: nowrap;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    padding: 0.25rem 0; scroll-padding-inline: 0.5rem;
+  }
+  .nav-links::-webkit-scrollbar { display: none; }
+  .nav-links > * { flex: 0 0 auto; }
+}
 .btn {
   display: inline-block; padding: 0.55rem 1.15rem; font-size: 0.78rem; letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--ink) !important;
