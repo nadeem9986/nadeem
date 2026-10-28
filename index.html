@@ -225,7 +225,10 @@ h2 .slash { color: var(--faint); }
   font-size: clamp(2.6rem, 8vw, 4.6rem); line-height: 1.05; letter-spacing: 0.06em; color: var(--white);
 }
 .hero-copy h1 span { color: var(--dim); }
-.hero-role { margin-top: 1rem; font-size: clamp(0.95rem, 2.6vw, 1.25rem); color: var(--ink); letter-spacing: 0.1em; }
+.hero-role { display: grid; margin-top: 1rem; font-size: clamp(0.95rem, 2.6vw, 1.25rem); color: var(--ink); letter-spacing: 0.1em; }
+/* Keep the full headline footprint while letters type and erase. */
+.hero-role::after { content: "SOFTWARE ENGINEER - I build production web interfaces._"; visibility: hidden; pointer-events: none; grid-area: 1 / 1; }
+.hero-role-live { grid-area: 1 / 1; }
 .hero-role .cursor { display: inline-block; width: 0.6em; color: var(--white); animation: blink 1s steps(2) infinite; }
 .hero-sub { margin-top: 1.2rem; color: var(--dim); max-width: 46ch; font-size: 0.92rem; }
 .hero-ctas { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 0.9rem; }
@@ -417,7 +420,7 @@ footer a { color: var(--dim); }
     <div class="hero-copy">
       <p class="kicker">// Portfolio Interface v2.1</p>
       <h1>NADEEM</h1>
-      <p class="hero-role">SOFTWARE ENGINEER - I build <span id="typed"></span><span class="cursor">_</span></p>
+      <p class="hero-role"><span class="hero-role-live">SOFTWARE ENGINEER - I build <span id="typed"></span><span class="cursor">_</span></span></p>
       <p class="hero-sub">Software engineer in Bengaluru who uses AI to ship faster. I design and build production web interfaces, Android apps and the plumbing that deploys them.</p>
       <div class="hero-ctas">
         <a class="btn solid" href="#projects">View Projects</a>
