@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Nadeem | Software Engineer</title>
+<title>NADEEM | Software Engineer</title>
 <meta name="description" content="Nadeem is a software engineer in Bengaluru who builds production web interfaces, Android apps and AI-assisted workflows. Software engineering at SmiRox Ventures; ships with HTML, CSS, JavaScript, React, Node.js and Kotlin." />
 <meta name="theme-color" content="#0a0a0a" />
-<meta property="og:title" content="Nadeem | Software Engineer" />
+<meta property="og:title" content="NADEEM | Software Engineer" />
 <meta property="og:description" content="Software engineer building production web interfaces and AI-assisted systems. FamEase UIs across 8+ domains at SmiRox Ventures." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://n4deem.site" />
@@ -137,6 +137,11 @@ a:hover { color: var(--white); text-decoration: underline; text-underline-offset
   margin-bottom: 1.4rem;
 }
 .boot-lines { min-height: 10.5em; font-size: clamp(0.72rem, 2.2vw, 0.92rem); color: var(--dim); }
+.boot-loader { display: flex; gap: 5px; margin: 0 0 0.9rem; }
+.boot-loader span { width: 22px; height: 4px; background: var(--dim); animation: bootPulse 0.9s steps(2, end) infinite; }
+.boot-loader span:nth-child(2) { animation-delay: 0.15s; }
+.boot-loader span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes bootPulse { 50% { opacity: 0.18; } }
 .boot-lines div { white-space: pre-wrap; }
 .boot-lines .ok { color: var(--white); }
 .boot-bar {
@@ -201,7 +206,7 @@ h2 .slash { color: var(--faint); }
 
 /* ---------- hero ---------- */
 .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr; gap: 2.5rem; align-items: center; padding-top: 7rem; }
-@media (min-width: 920px) { .hero { grid-template-columns: 1.15fr 0.85fr; } }
+@media (min-width: 920px) { .hero { grid-template-columns: 1.15fr 0.85fr; } .status-panel { display: block; } }
 .hero-copy .kicker { color: var(--faint); font-size: 0.78rem; letter-spacing: 0.4em; text-transform: uppercase; margin-bottom: 1rem; }
 .hero-copy h1 {
   font-size: clamp(2.6rem, 8vw, 4.6rem); line-height: 1.05; letter-spacing: 0.06em; color: var(--white);
@@ -216,7 +221,7 @@ h2 .slash { color: var(--faint); }
 .stat .lbl { font-size: 0.66rem; letter-spacing: 0.22em; color: var(--faint); text-transform: uppercase; }
 
 /* ---------- status panel (hero side) ---------- */
-.status-panel { padding: 1.6rem 1.7rem; }
+.status-panel { display: none; padding: 1.6rem 1.7rem; }
 .status-panel .sp-head {
   display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1.2rem;
   font-size: 0.68rem; letter-spacing: 0.3em; color: var(--faint); text-transform: uppercase;
@@ -332,7 +337,8 @@ footer a { color: var(--dim); }
 
 <div id="boot" aria-hidden="true">
   <div class="boot-inner">
-    <div class="boot-logo">NADEEM.OS</div>
+    <div class="boot-logo">NADEEM</div>
+    <div class="boot-loader" aria-hidden="true"><span></span><span></span><span></span></div>
     <div class="boot-lines" id="bootLines"></div>
     <div class="boot-bar"><span id="bootBar"></span></div>
     <div class="boot-skip">PRESS ANY KEY OR TAP TO SKIP</div>
@@ -345,7 +351,7 @@ footer a { color: var(--dim); }
 <div class="vignette"></div>
 
 <header class="nav">
-  <a class="nav-brand" href="#top"><span class="dot"></span>NADEEM.OS</a>
+  <a class="nav-brand" href="#top"><span class="dot"></span>NADEEM</a>
   <nav class="nav-links" aria-label="Primary">
     <span class="nav-status">SYS.ONLINE</span>
     <a href="#experience">Experience</a>
@@ -361,18 +367,9 @@ footer a { color: var(--dim); }
 <main id="top">
 
   <section class="hero">
-    <div class="panel status-panel reveal in">
-      <div class="sp-head"><span class="ledsq"></span> SYSTEM STATUS</div>
-      <div class="sp-row"><span class="k">Role</span><span class="v">Software Engineer</span></div>
-      <div class="sp-row"><span class="k">Base</span><span class="v">Bengaluru, India</span></div>
-      <div class="sp-row"><span class="k">Work</span><span class="v">SmiRox Ventures LLP</span></div>
-      <div class="sp-row"><span class="k">Focus</span><span class="v">Web UIs - Android - AI-assisted dev</span></div>
-      <div class="sp-row"><span class="k">Status</span><span class="v on">Open to SDE roles</span></div>
-    </div>
-    </div>
     <div class="hero-copy">
       <p class="kicker">// Portfolio Interface v2.1</p>
-      <h1>NADEEM <span>A</span></h1>
+      <h1>NADEEM</h1>
       <p class="hero-role">SOFTWARE ENGINEER - I build <span id="typed"></span><span class="cursor">_</span></p>
       <p class="hero-sub">Software engineer in Bengaluru who uses AI to ship faster. I design and build production web interfaces, Android apps and the plumbing that deploys them.</p>
       <div class="hero-ctas">
@@ -385,6 +382,14 @@ footer a { color: var(--dim); }
         <div class="stat"><div class="num">24</div><div class="lbl">Public repos</div></div>
         <div class="stat"><div class="num">1</div><div class="lbl">Live client site</div></div>
       </div>
+    </div>
+    <div class="panel status-panel reveal in">
+      <div class="sp-head"><span class="ledsq"></span> SYSTEM STATUS</div>
+      <div class="sp-row"><span class="k">Role</span><span class="v">Software Engineer</span></div>
+      <div class="sp-row"><span class="k">Base</span><span class="v">Bengaluru, India</span></div>
+      <div class="sp-row"><span class="k">Work</span><span class="v">SmiRox Ventures LLP</span></div>
+      <div class="sp-row"><span class="k">Focus</span><span class="v">Web UIs - Android - AI-assisted dev</span></div>
+      <div class="sp-row"><span class="k">Status</span><span class="v on">Open to SDE roles</span></div>
     </div>
   </section>
 
@@ -539,7 +544,7 @@ footer a { color: var(--dim); }
   var bootLines = document.getElementById("bootLines");
   var bootBar = document.getElementById("bootBar");
   var lines = [
-    "> NADEEM.OS // HUD INTERFACE v2.1",
+    "> NADEEM // HUD INTERFACE v2.1",
     "> Initializing power core ............ OK",
     "> Igniting arc reactor ............... OK",
     "> Loading holographic interface ...... OK",
@@ -551,13 +556,8 @@ footer a { color: var(--dim); }
     if (bootDone) return;
     bootDone = true;
     boot.classList.add("done");
-    try { sessionStorage.setItem("nos-booted", "1"); } catch (e) {}
   }
-  var already = false;
-  try { already = sessionStorage.getItem("nos-booted") === "1"; } catch (e) {}
-  if (already) {
-    finishBoot();
-  } else {
+  {
     var li = 0;
     var timer = setInterval(function () {
       if (bootDone) { clearInterval(timer); return; }
@@ -625,7 +625,7 @@ footer a { color: var(--dim); }
     contact: "email .... nadeemise2025@gmail.com\ngithub ... https://github.com/nadeem9986\nlinkedin . https://www.linkedin.com/in/nadeem-233a46256\nbase ..... Bengaluru, India\nstatus ... OPEN TO SOFTWARE ENGINEER ROLES",
     jarvis: "At your service, sir.\n(All systems nominal. Arc reactor output steady. Resume is one command away: 'resume')",
     sudo: "Nice try. This incident will be reported to the boss.",
-    banner: "NADEEM.OS // HUD INTERFACE v2.1 - type 'help'"
+    banner: "NADEEM // HUD INTERFACE v2.1 - type 'help'"
   };
   function run(raw) {
     var cmdline = raw.trim();
