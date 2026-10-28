@@ -344,24 +344,23 @@ footer a { color: var(--dim); }
 /* ---------- transformer theme flip ---------- */
 .grid-flip-layer {
   position: fixed; inset: 0; z-index: 0; display: grid; overflow: hidden;
-  pointer-events: none; perspective: 1000px; transform-style: preserve-3d;
-  contain: strict;
+  pointer-events: none; contain: strict;
 }
 .grid-flip-tile {
-  width: 44px; height: 44px; backface-visibility: hidden;
-  transform-origin: center center; transform-style: preserve-3d;
-  will-change: transform, background-color;
+  position: relative; width: 100%; height: 100%;
+  transform-origin: center; transform-style: preserve-3d;
+  will-change: transform;
 }
-html.theme-shifting body > :not(.grid-flip-layer),
-html.theme-shifting body > :not(.grid-flip-layer) * {
-  transition-property: color, background-color, border-color, box-shadow;
-  transition-duration: 0.65s;
-  transition-timing-function: ease;
+.grid-flip-face {
+  position: absolute; inset: 0; backface-visibility: hidden;
+  background-color: var(--flip-bg);
+  background-image: linear-gradient(var(--flip-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--flip-line) 1px, transparent 1px);
+  background-size: 44px 44px;
 }
+.grid-flip-back { transform: rotateX(180deg); }
 @media (prefers-reduced-motion: reduce) {
   .grid-flip-layer { display: none !important; }
-  html.theme-shifting body > :not(.grid-flip-layer),
-  html.theme-shifting body > :not(.grid-flip-layer) * { transition-duration: 0.01ms !important; }
 }
 
 /* square dots (no circles) */
@@ -767,58 +766,66 @@ html.theme-shifting body > :not(.grid-flip-layer) * {
       paint(next);
       return;
     }
-    var oldBg = getComputedStyle(root).getPropertyValue('--bg').trim();
-    var oldLine = getComputedStyle(root).getPropertyValue('--tint-03').trim();
-    var cols = Math.ceil(window.innerWidth / 44);
-    var rows = Math.ceil(window.innerHeight / 44);
+    // Pre-painted faces: only the rotation is animated, never colors/borders.
+    // Group 2x2 background squares on phones to avoid hundreds of GPU layers.
+    var size = window.innerWidth < 600 ? 88 : 44;
+    while (Math.ceil(innerWidth / size) * Math.ceil(innerHeight / size) > 240) size += 44;
+    var cols = Math.ceil(innerWidth / size), rows = Math.ceil(innerHeight / size);
+    var oldLight = root.getAttribute('data-theme') === 'light';
+    var oldBg = oldLight ? '#f4f4f4' : '#0a0a0a';
+    var newBg = next === 'light' ? '#f4f4f4' : '#0a0a0a';
+    var oldLine = oldLight ? 'rgba(0,0,0,.04)' : 'rgba(255,255,255,.03)';
+    var newLine = next === 'light' ? 'rgba(0,0,0,.04)' : 'rgba(255,255,255,.03)';
     var layer = document.createElement('div');
     layer.className = 'grid-flip-layer';
     layer.setAttribute('aria-hidden', 'true');
-    layer.style.gridTemplateColumns = 'repeat(' + cols + ', 44px)';
-    layer.style.gridTemplateRows = 'repeat(' + rows + ', 44px)';
-    var tiles = [];
+    layer.style.gridTemplateColumns = 'repeat(' + cols + ',' + size + 'px)';
+    layer.style.gridTemplateRows = 'repeat(' + rows + ',' + size + 'px)';
+    var tiles = [], fragment = document.createDocumentFragment();
     for (var r = 0; r < rows; r++) {
       for (var c = 0; c < cols; c++) {
         var tile = document.createElement('span');
         tile.className = 'grid-flip-tile';
-        tile.style.backgroundColor = oldBg;
-        tile.style.borderRight = '1px solid ' + oldLine;
-        tile.style.borderBottom = '1px solid ' + oldLine;
-        layer.appendChild(tile);
+        var front = document.createElement('span'), back = document.createElement('span');
+        front.className = 'grid-flip-face';
+        back.className = 'grid-flip-face grid-flip-back';
+        front.style.setProperty('--flip-bg', oldBg);
+        front.style.setProperty('--flip-line', oldLine);
+        back.style.setProperty('--flip-bg', newBg);
+        back.style.setProperty('--flip-line', newLine);
+        tile.appendChild(front); tile.appendChild(back);
+        fragment.appendChild(tile);
         tiles.push({ element: tile, row: r, col: c });
       }
     }
-    document.body.appendChild(layer);
-    root.classList.add('theme-shifting');
-    void root.offsetWidth;
-    root.setAttribute('data-theme', next);
-    try { localStorage.setItem('theme', next); } catch (e) {}
-    paint(next);
-    var newBg = getComputedStyle(root).getPropertyValue('--bg').trim();
-    var newLine = getComputedStyle(root).getPropertyValue('--tint-03').trim();
-    var direction = next === 'light' ? 1 : -1;
-    var animations = tiles.map(function (item) {
-      var turn = direction * 180;
-      return item.element.animate([
-        { transform: 'rotateX(0deg)', backgroundColor: oldBg, borderColor: oldLine, offset: 0 },
-        { transform: 'rotateX(' + (direction * 90) + 'deg)', backgroundColor: oldBg, borderColor: oldLine, offset: 0.48 },
-        { transform: 'rotateX(' + (direction * 90) + 'deg)', backgroundColor: newBg, borderColor: newLine, offset: 0.52 },
-        { transform: 'rotateX(' + turn + 'deg)', backgroundColor: newBg, borderColor: newLine, offset: 1 }
-      ], {
-        duration: 850,
-        delay: (item.row + item.col) * 14,
-        easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)',
-        fill: 'forwards'
-      });
-    });
+    layer.appendChild(fragment);
     btn.disabled = true;
-    Promise.all(animations.map(function (animation) {
-      return animation.finished.catch(function () {});
-    })).then(function () {
-      layer.remove();
-      root.classList.remove('theme-shifting');
-      btn.disabled = false;
-    });
+    document.body.appendChild(layer);
+    var direction = next === 'light' ? 1 : -1;
+    // Let Chrome rasterize the faces before starting the compositor animation.
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      paint(next);
+      var spread = 220, diagonal = Math.max(1, rows + cols - 2);
+      var animations = tiles.map(function (item) {
+        return item.element.animate([
+          { transform: 'perspective(700px) rotateX(0deg)' },
+          { transform: 'perspective(700px) rotateX(' + (direction * 180) + 'deg)' }
+        ], {
+          duration: 560,
+          delay: (item.row + item.col) / diagonal * spread,
+          easing: 'cubic-bezier(.4,0,.2,1)',
+          fill: 'both'
+        });
+      });
+      Promise.all(animations.map(function (animation) {
+        return animation.finished.catch(function () {});
+      })).then(function () {
+        layer.remove();
+        btn.disabled = false;
+      });
+    }); });
   }
   btn.addEventListener('click', function () {
     if (btn.disabled) return;
