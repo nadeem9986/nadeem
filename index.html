@@ -588,7 +588,9 @@ html.theme-shifting body > :not(.grid-flip-layer) * {
     function cancelHint() {
       if (cancelled) return;
       cancelled = true;
-      nav.scrollTo({ left: nav.scrollLeft, behavior: "instant" });
+      var left = nav.scrollLeft;
+      nav.style.scrollBehavior = "auto";
+      nav.scrollLeft = left;
       cleanup();
     }
     function cleanup() {
