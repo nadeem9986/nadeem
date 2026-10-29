@@ -374,6 +374,13 @@ footer a { color: var(--dim); }
 .content-flip-face.back { transform: rotateX(180deg); }
 .content-flip-face > div > * { margin: 0 !important; width: 100% !important; height: 100% !important; transform: none !important; opacity: 1 !important; visibility: visible !important; }
 .content-flip-face *, .content-flip-face *::before, .content-flip-face *::after { transition: none !important; animation: none !important; backdrop-filter: none !important; }
+/* Words flip together on one shared surface: plain text clones, transparent
+   faces - the words themselves flip, never per-word cards. */
+.content-flip-words { position: fixed; inset: 0; pointer-events: none; transform-style: preserve-3d; will-change: transform; contain: strict; }
+.content-flip-words .words-face { position: absolute; inset: 0; backface-visibility: hidden; color: var(--ink); }
+.content-flip-words .words-face.back { transform: rotateX(180deg); }
+.content-flip-words .words-face > * { position: absolute !important; margin: 0 !important; transform: none !important; opacity: 1 !important; visibility: visible !important; }
+.content-flip-words *, .content-flip-words *::before, .content-flip-words *::after { transition: none !important; animation: none !important; backdrop-filter: none !important; }
 .theme-flip-source { visibility: hidden !important; }
 .theme-flipping *, .theme-flipping *::before, .theme-flipping *::after { transition: none !important; }
 
@@ -818,14 +825,24 @@ footer a { color: var(--dim); }
     contentLayer.setAttribute('aria-hidden', 'true');
     contentLayer.inert = true;
     var oldTheme = oldLight ? 'light' : 'dark';
-    var selector = '.hero-copy, .panel, .xp-item, .terminal, section > h2, section > .sec-tag, footer, .nav-brand, .nav-links > *';
-    var content = [];
+    // Cards (panels, terminal) flip as cards, each on its own surface. Plain
+    // words ride one shared wrapper and flip as a single sheet, so no word
+    // ever gets its own black/white card.
+    var cardSelector = '.panel, .terminal';
+    var wordSelector = '.hero-copy, .xp-item, section > h2, section > .sec-tag, footer, .nav-brand, .nav-links';
+    var content = [], words = [];
     // Measure first, then write: no per-card forced layout loop.
-    document.querySelectorAll(selector).forEach(function (element) {
-      if (element.closest('.panel, .terminal') !== element && element.closest('.panel, .terminal')) return;
+    document.querySelectorAll(cardSelector).forEach(function (element) {
+      if (element.closest('.panel, .terminal') !== element) return;
       var rect = element.getBoundingClientRect();
       if (!rect.width || !rect.height || rect.bottom <= 0 || rect.top >= innerHeight || rect.right <= 0 || rect.left >= innerWidth || getComputedStyle(element).visibility === 'hidden') return;
       content.push({ source: element, rect: rect });
+    });
+    document.querySelectorAll(wordSelector).forEach(function (element) {
+      if (element.closest('.panel, .terminal')) return;
+      var rect = element.getBoundingClientRect();
+      if (!rect.width || !rect.height || rect.bottom <= 0 || rect.top >= innerHeight || rect.right <= 0 || rect.left >= innerWidth || getComputedStyle(element).visibility === 'hidden') return;
+      words.push({ source: element, rect: rect });
     });
     content.forEach(function (item) {
       var card = document.createElement('div'), rect = item.rect;
@@ -854,10 +871,33 @@ footer a { color: var(--dim); }
       contentLayer.appendChild(card);
       item.element = card;
     });
+    // One shared flipping surface for every visible word: transparent faces,
+    // plain text clones - the words flip, no black/white card behind them.
+    var wordsWrapper = document.createElement('div');
+    wordsWrapper.className = 'content-flip-words';
+    wordsWrapper.setAttribute('aria-hidden', 'true');
+    wordsWrapper.inert = true;
+    [oldTheme, next].forEach(function (theme, i) {
+      var face = document.createElement('div');
+      face.className = 'words-face' + (i ? ' back' : '');
+      face.setAttribute('data-flip-theme', theme);
+      words.forEach(function (item) {
+        var copy = item.source.cloneNode(true);
+        var themeLabel = copy.id === 'themeLabel' ? copy : copy.querySelector('#themeLabel');
+        if (themeLabel) themeLabel.textContent = theme === 'dark' ? 'LIGHT' : 'DARK';
+        copy.removeAttribute('id');
+        copy.querySelectorAll('[id]').forEach(function (node) { node.removeAttribute('id'); });
+        copy.style.cssText = 'left:' + item.rect.left + 'px;top:' + item.rect.top + 'px;width:' + item.rect.width + 'px;transition:none';
+        face.appendChild(copy);
+      });
+      wordsWrapper.appendChild(face);
+    });
+    if (words.length) contentLayer.appendChild(wordsWrapper);
     btn.disabled = true;
     document.body.appendChild(layer);
     document.body.appendChild(contentLayer);
     content.forEach(function (item) { item.source.classList.add('theme-flip-source'); });
+    words.forEach(function (item) { item.source.classList.add('theme-flip-source'); });
     // Do the single real theme repaint BEFORE motion. The copies already carry
     // both palettes, so no colors, borders, shadows or filters animate.
     root.classList.add('theme-flipping');
@@ -871,6 +911,7 @@ footer a { color: var(--dim); }
       finished = true;
       animations.forEach(function (animation) { animation.cancel(); });
       content.forEach(function (item) { item.source.classList.remove('theme-flip-source'); });
+      words.forEach(function (item) { item.source.classList.remove('theme-flip-source'); });
       layer.remove(); contentLayer.remove(); btn.disabled = false;
       root.classList.remove('theme-flipping');
       window.removeEventListener('resize', finish);
@@ -900,6 +941,8 @@ footer a { color: var(--dim); }
         var col = Math.max(0, Math.min(cols - 1, (rect.left + rect.width / 2) / size));
         animations.push(rotate(item.element, (row + col) / diagonal * spread));
       });
+      // All words flip together as one surface: a single smooth rotation.
+      if (words.length) animations.push(rotate(wordsWrapper, 0, 1200));
       Promise.all(animations.map(function (animation) {
         return animation.finished.catch(function () {});
       })).then(finish);
