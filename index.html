@@ -159,7 +159,7 @@ a:hover { color: var(--white); text-decoration: underline; text-underline-offset
 
 /* ---------- nav ---------- */
 .nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 70;
   display: flex; align-items: center; justify-content: space-between;
   padding: 0.85rem clamp(1rem, 4vw, 2.5rem);
   background: var(--nav-bg);
@@ -333,6 +333,7 @@ a.tag:hover { color: var(--white); border-color: var(--panel-edge-hi); text-deco
 /* ---------- footer ---------- */
 footer { border-top: 1px solid var(--tint-09); padding: 1.6rem clamp(1.1rem, 5vw, 3rem) 2.4rem; text-align: center; color: var(--faint); font-size: 0.7rem; letter-spacing: 0.16em; position: relative; z-index: 1; }
 footer a { color: var(--dim); }
+.foot-cursor { color: var(--dim); animation: blink 1.2s steps(2) infinite; }
 
 /* ---------- reveal ---------- */
 .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
@@ -382,6 +383,9 @@ footer a { color: var(--dim); }
 .content-flip-words .words-face > * { position: absolute !important; margin: 0 !important; transform: none !important; opacity: 1 !important; visibility: visible !important; }
 .content-flip-words *, .content-flip-words *::before, .content-flip-words *::after { transition: none !important; animation: none !important; backdrop-filter: none !important; }
 .theme-flip-source { visibility: hidden !important; }
+/* The navbar is chrome, not content: never cloned into the flip, stays put
+   above every flip layer, fully opaque so the sweep never bleeds through. */
+.theme-flipping .nav { background: var(--bg); }
 .theme-flipping *, .theme-flipping *::before, .theme-flipping *::after { transition: none !important; }
 
 /* square dots (no circles) */
@@ -589,7 +593,7 @@ footer a { color: var(--dim); }
 </main>
 
 <footer>
-  <p>(c) 2026 NADEEM - BUILT WITH HTML, CSS &amp; JAVASCRIPT | TYPE SET IN <a href="https://departuremono.com" target="_blank" rel="noopener">DEPARTURE MONO</a> (SIL OFL)</p>
+  <p>&gt; created by nadeem<span class="foot-cursor">_</span></p>
 </footer>
 
 <script>
@@ -829,16 +833,18 @@ footer a { color: var(--dim); }
     // words ride one shared wrapper and flip as a single sheet, so no word
     // ever gets its own black/white card.
     var cardSelector = '.panel, .terminal';
-    var wordSelector = '.hero-copy, .xp-item, section > h2, section > .sec-tag, footer, .nav-brand, .nav-links';
+    var wordSelector = '.hero-copy, .xp-item, section > h2, section > .sec-tag, footer';
     var content = [], words = [];
     // Measure first, then write: no per-card forced layout loop.
     document.querySelectorAll(cardSelector).forEach(function (element) {
+      if (element.closest('.nav')) return;
       if (element.closest('.panel, .terminal') !== element) return;
       var rect = element.getBoundingClientRect();
       if (!rect.width || !rect.height || rect.bottom <= 0 || rect.top >= innerHeight || rect.right <= 0 || rect.left >= innerWidth || getComputedStyle(element).visibility === 'hidden') return;
       content.push({ source: element, rect: rect });
     });
     document.querySelectorAll(wordSelector).forEach(function (element) {
+      if (element.closest('.nav')) return;
       if (element.closest('.panel, .terminal')) return;
       var rect = element.getBoundingClientRect();
       if (!rect.width || !rect.height || rect.bottom <= 0 || rect.top >= innerHeight || rect.right <= 0 || rect.left >= innerWidth || getComputedStyle(element).visibility === 'hidden') return;
