@@ -926,13 +926,13 @@ footer a { color: var(--dim); }
       if (finished) return;
       // Diagonal tile sweep from the top-left corner: stagger over (row + col),
       // smooth standard easing, sped up - about 390ms end to end.
-      var spread = 110, diagonal = Math.max(1, rows + cols - 2);
+      var spread = 220, diagonal = Math.max(1, rows + cols - 2);
       function rotate(element, delay, perspective) {
         perspective = perspective || 900;
         return element.animate([
           { transform: 'perspective(' + perspective + 'px) rotateX(0deg)' },
           { transform: 'perspective(' + perspective + 'px) rotateX(' + (direction * 180) + 'deg)' }
-        ], { duration: 280, delay: delay, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'both' });
+        ], { duration: 560, delay: delay, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'both' });
       }
       animations = tiles.map(function (item) {
         return rotate(item.element, (item.row + item.col) / diagonal * spread, 700);
