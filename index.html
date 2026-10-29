@@ -924,22 +924,29 @@ footer a { color: var(--dim); }
     // Two frames allow both old/new faces to rasterize before rotation starts.
     requestAnimationFrame(function () { requestAnimationFrame(function () {
       if (finished) return;
-      var spread = 220, diagonal = Math.max(1, rows + cols - 2);
+      // Slow birth at the toggle button, then an accelerating whoosh across the
+      // screen: stagger radiates from the button (~150ms across the viewport),
+      // each tile eases in exponentially and whips over. ~550ms end to end.
+      var spread = 150, tileDuration = 400;
+      var btnRect = btn.getBoundingClientRect();
+      var btnX = btnRect.left + btnRect.width / 2, btnY = btnRect.top + btnRect.height / 2;
+      var maxDist = Math.max(1, Math.hypot(Math.max(btnX, innerWidth - btnX), Math.max(btnY, innerHeight - btnY)));
+      function radialDelay(x, y) {
+        return Math.hypot(x - btnX, y - btnY) / maxDist * spread;
+      }
       function rotate(element, delay, perspective) {
         perspective = perspective || 900;
         return element.animate([
           { transform: 'perspective(' + perspective + 'px) rotateX(0deg)' },
           { transform: 'perspective(' + perspective + 'px) rotateX(' + (direction * 180) + 'deg)' }
-        ], { duration: 560, delay: delay, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'both' });
+        ], { duration: tileDuration, delay: delay, easing: 'cubic-bezier(.7,0,.84,0)', fill: 'both' });
       }
       animations = tiles.map(function (item) {
-        return rotate(item.element, (item.row + item.col) / diagonal * spread, 700);
+        return rotate(item.element, radialDelay(item.col * size + size / 2, item.row * size + size / 2), 700);
       });
       content.forEach(function (item) {
         var rect = item.rect;
-        var row = Math.max(0, Math.min(rows - 1, (rect.top + rect.height / 2) / size));
-        var col = Math.max(0, Math.min(cols - 1, (rect.left + rect.width / 2) / size));
-        animations.push(rotate(item.element, (row + col) / diagonal * spread));
+        animations.push(rotate(item.element, radialDelay(rect.left + rect.width / 2, rect.top + rect.height / 2)));
       });
       // All words flip together as one surface: a single smooth rotation.
       if (words.length) animations.push(rotate(wordsWrapper, 0, 1200));
@@ -954,6 +961,14 @@ footer a { color: var(--dim); }
     changeTheme(next);
   });
 })();
+</script>
+<script>
+/* Offline/perf: precache all site assets on first load; failure leaves the site exactly as before. */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').catch(function () {});
+  });
+}
 </script>
 </body>
 </html>
