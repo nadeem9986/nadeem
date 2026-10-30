@@ -386,6 +386,17 @@ footer a { color: var(--dim); }
 /* The navbar is chrome, not content: never cloned into the flip, stays put
    above every flip layer, fully opaque so the sweep never bleeds through. */
 .theme-flipping .nav { background: var(--bg); }
+/* Wide-screen smoothness pass: the flip is a full-viewport sprint, so strip
+   anything that forces per-frame main-thread raster while it runs. The nav is
+   already fully opaque during the flip, so its backdrop blur is invisible yet
+   still re-renders every frame the sweep moves under it; ambient pulses and
+   blinks pause for the sprint too. Below 1024px none of this applies - the
+   phone path stays exactly as it was. */
+@media (min-width: 1024px) {
+  .theme-flipping .nav { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+  .theme-flipping .panel { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+  .theme-flipping *, .theme-flipping *::before, .theme-flipping *::after { animation-play-state: paused !important; }
+}
 .theme-flipping *, .theme-flipping *::before, .theme-flipping *::after { transition: none !important; }
 
 /* square dots (no circles) */
@@ -931,9 +942,14 @@ footer a { color: var(--dim); }
     window.addEventListener('resize', finish, { once: true });
     window.addEventListener('scroll', finish, { once: true, passive: true });
     window.addEventListener('pagehide', finish, { once: true });
-    // Two frames allow both old/new faces to rasterize before rotation starts.
-    requestAnimationFrame(function () { requestAnimationFrame(function () {
+    // Let both old/new faces fully rasterize before rotation starts. Wide
+    // screens carry bigger textures (viewport-sized word sheet, larger cards),
+    // so they get one extra settle frame - the difference between a clean
+    // first frame and a stuttered one. Phones keep the original two.
+    var settleFrames = wide ? 3 : 2;
+    function startWhenSettled() {
       if (finished) return;
+      if (--settleFrames > 0) { requestAnimationFrame(startWhenSettled); return; }
       // Diagonal tile sweep from the top-left corner: stagger over (row + col),
       // smooth standard easing. Wide screens scale the flip and stagger down so
       // the longer physical sweep feels as quick as it does on a phone
@@ -961,7 +977,8 @@ footer a { color: var(--dim); }
       Promise.all(animations.map(function (animation) {
         return animation.finished.catch(function () {});
       })).then(finish);
-    }); });
+    }
+    requestAnimationFrame(startWhenSettled);
   }
   btn.addEventListener('click', function () {
     if (btn.disabled) return;
