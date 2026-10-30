@@ -793,8 +793,12 @@ footer a { color: var(--dim); }
     }
     // Pre-painted faces: only the rotation is animated, never colors/borders.
     // Group 2x2 background squares on phones to avoid hundreds of GPU layers.
+    // Wide screens get fewer, larger tiles instead: the sweep has much more
+    // ground to cover there, so a hard layer cap keeps the GPU load down.
+    var wide = window.innerWidth >= 1024;
     var size = window.innerWidth < 600 ? 88 : 44;
-    while (Math.ceil(innerWidth / size) * Math.ceil(innerHeight / size) > 240) size += 44;
+    var maxTiles = wide ? 110 : 240;
+    while (Math.ceil(innerWidth / size) * Math.ceil(innerHeight / size) > maxTiles) size += 44;
     var cols = Math.ceil(innerWidth / size), rows = Math.ceil(innerHeight / size);
     var oldLight = root.getAttribute('data-theme') === 'light';
     var oldBg = oldLight ? '#f4f4f4' : '#0a0a0a';
@@ -931,14 +935,17 @@ footer a { color: var(--dim); }
     requestAnimationFrame(function () { requestAnimationFrame(function () {
       if (finished) return;
       // Diagonal tile sweep from the top-left corner: stagger over (row + col),
-      // smooth standard easing, sped up - about 390ms end to end.
-      var spread = 220, diagonal = Math.max(1, rows + cols - 2);
+      // smooth standard easing. Wide screens scale the flip and stagger down so
+      // the longer physical sweep feels as quick as it does on a phone
+      // (~570ms end to end; small screens keep the original 780ms feel).
+      var spread = wide ? 130 : 220, diagonal = Math.max(1, rows + cols - 2);
+      var flipDuration = wide ? 440 : 560;
       function rotate(element, delay, perspective) {
         perspective = perspective || 900;
         return element.animate([
           { transform: 'perspective(' + perspective + 'px) rotateX(0deg)' },
           { transform: 'perspective(' + perspective + 'px) rotateX(' + (direction * 180) + 'deg)' }
-        ], { duration: 560, delay: delay, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'both' });
+        ], { duration: flipDuration, delay: delay, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'both' });
       }
       animations = tiles.map(function (item) {
         return rotate(item.element, (item.row + item.col) / diagonal * spread, 700);
