@@ -1,11 +1,10 @@
 /* n4deem.site service worker: precache everything on first load, serve cache-first.
    Bump CACHE_VERSION on every deploy so old caches are invalidated cleanly. */
-var CACHE_VERSION = 'n4deem-2026-11-02-v8';
+var CACHE_VERSION = 'n4deem-2026-11-07-v9';
 var ASSETS = [
   '/',
   '/index.html',
-  '/assets/webfonts/DepartureMono-Regular.woff2',
-  '/resume/Nadeem_resume.pdf'
+  '/assets/webfonts/DepartureMono-Regular.woff2'
 ];
 
 self.addEventListener('install', function (event) {
@@ -32,6 +31,7 @@ self.addEventListener('fetch', function (event) {
   var request = event.request;
   if (request.method !== 'GET') return;
   if (new URL(request.url).origin !== self.location.origin) return;
+  if (new URL(request.url).pathname.indexOf('/resume/') === 0) return;
   event.respondWith(
     caches.match(request, { ignoreSearch: true }).then(function (cached) {
       if (cached) return cached;
