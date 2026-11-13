@@ -169,7 +169,7 @@ a:hover { color: var(--white); text-decoration: underline; text-underline-offset
   backdrop-filter: blur(10px);
 }
 .nav-brand { display: flex; align-items: center; gap: 0.65rem; color: var(--ink); letter-spacing: 0.18em; font-size: 0.95rem; }
-.nav-brand .brand-logo { width: 22px; height: 22px; flex: none; display: block; }
+.nav-brand .brand-logo { width: 22px; height: 22px; flex: none; display: block; transform: rotate(var(--logo-rotation, 0deg)); transform-origin: center; }
 [data-theme="light"] .nav-brand .brand-logo { filter: invert(1); }
 .nav-links { display: flex; align-items: center; gap: clamp(0.8rem, 2.4vw, 1.7rem); font-size: 0.8rem; letter-spacing: 0.12em; }
 .nav-links a { color: var(--dim); text-transform: uppercase; text-decoration: none; }
@@ -341,6 +341,7 @@ footer a { color: var(--dim); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
   html { scroll-behavior: auto; }
+  .nav-brand .brand-logo { transform: none; }
   .reveal { opacity: 1; transform: none; }
 }
 
@@ -958,6 +959,35 @@ footer a { color: var(--dim); }
     var next = (root.getAttribute('data-theme') === 'dark') ? 'light' : 'dark';
     changeTheme(next);
   });
+})();
+</script>
+<script>
+/* Scroll-linked gear motion: one turn per 3000px, no idle animation. */
+(function () {
+  'use strict';
+  var logo = document.querySelector('.nav-brand .brand-logo');
+  if (!logo || !window.matchMedia) return;
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var frame = 0;
+  function paintLogo() {
+    frame = 0;
+    var angle = reducedMotion.matches ? 0 : Math.max(0, window.scrollY) * 0.12;
+    logo.style.setProperty('--logo-rotation', angle + 'deg');
+  }
+  function queueLogo() {
+    if (reducedMotion.matches || frame) return;
+    frame = window.requestAnimationFrame(paintLogo);
+  }
+  function motionChanged() {
+    if (frame) window.cancelAnimationFrame(frame);
+    frame = 0;
+    paintLogo();
+  }
+  window.addEventListener('scroll', queueLogo, { passive: true });
+  window.addEventListener('pageshow', motionChanged);
+  if (reducedMotion.addEventListener) reducedMotion.addEventListener('change', motionChanged);
+  else reducedMotion.addListener(motionChanged);
+  paintLogo();
 })();
 </script>
 <script>
