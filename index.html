@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<base href="/" />
+<link rel="canonical" href="https://n4deem.site/" />
 <title>Nadeem | Software Engineer in Bengaluru</title>
 <meta name="description" content="Nadeem is a software engineer in Bengaluru building production web interfaces with HTML, CSS and JavaScript. Explore work for FamEase, SmiRox and Only Apple Tech." />
 <meta name="theme-color" content="#0a0a0a" />
@@ -991,6 +993,43 @@ footer a { color: var(--dim); }
   if (reducedMotion.addEventListener) reducedMotion.addEventListener('change', motionChanged);
   else reducedMotion.addListener(motionChanged);
   paintLogo();
+})();
+</script>
+<script>
+/* Clean section URLs: /projects instead of /#projects. Cloudflare Pages serves index.html for these paths. */
+(function () {
+  var ids = ['about', 'experience', 'projects', 'skills', 'terminal', 'contact'];
+  function idFromPath() {
+    var p = location.pathname.replace(/^\/+|\/+$/g, '').toLowerCase();
+    return ids.indexOf(p) > -1 ? p : null;
+  }
+  function go(id, smooth) {
+    var el = id ? document.getElementById(id) : document.getElementById('top');
+    if (!el) return;
+    if (!id) { window.scrollTo({ top: 0, behavior: smooth ? 'smooth' : 'auto' }); return; }
+    el.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+  }
+  document.addEventListener('click', function (e) {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a = e.target.closest && e.target.closest('a[href^="#"], a[href^="/#"]');
+    if (!a) return;
+    var h = a.getAttribute('href').replace(/^\//, '').slice(1);
+    if (h !== 'top' && ids.indexOf(h) < 0) return;
+    e.preventDefault();
+    var id = h === 'top' ? null : h;
+    history.pushState(null, '', id ? '/' + id : '/');
+    go(id, true);
+  });
+  window.addEventListener('popstate', function () { go(idFromPath(), true); });
+  /* Old /#projects links still work and are rewritten to /projects. */
+  var start = idFromPath();
+  if (!start && location.hash && ids.indexOf(location.hash.slice(1)) > -1) {
+    start = location.hash.slice(1);
+    history.replaceState(null, '', '/' + start);
+  }
+  if (start) {
+    window.addEventListener('load', function () { setTimeout(function () { go(start, false); }, 60); });
+  }
 })();
 </script>
 <script>
